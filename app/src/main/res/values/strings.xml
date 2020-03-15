@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--TODO: Utworzyć analogiczny plik z wersją dla języka polskiego
+        Postaraj się przetłumaczyć poszczególne wartości na język polski -->
+
+    <string name="app_name">Android02c01</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_my_second">SecondActivity</string>
+    <string name="to_second">To Second</string>
+    <string name="to_web_browser">To Web Browser</string>
+    <string name="text_to_save">Text to save</string>
+    <string name="portrait">Portrait</string>
+    <string name="landscape">Landscape</string>
+
+
+</resources>
