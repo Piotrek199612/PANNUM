@@ -1,0 +1,34 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MyMainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+    <fragment
+        android:id="@+id/myFragmentMain"
+        android:name="com.example.kjankiewicz.android_03c01.MyFragmentMain"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/my_toolbar"
+        android:layout_margin="@dimen/activity_horizontal_margin" />
+
+    <FrameLayout
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/myFragmentMain"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myFragmentAnother"/>
+
+</RelativeLayout>
