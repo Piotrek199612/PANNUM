@@ -26,13 +26,16 @@ class MyFragmentMain : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_fragment_main, container, false);
 
-        /* TODO: Przypisz do atrybutów klasy Button odpowiednie elementy z definicji rozkładu,
+        /* DONE: Przypisz do atrybutów klasy Button odpowiednie elementy z definicji rozkładu,
            która w powyższej instrukcji została załadowana. Skorzystaj z poniższego fragmentu kodu
            button = view.findViewById(identyfikator_przycisku) as Button
          */
+        buttonOne = view.findViewById(R.id.button_one)
+        buttonTwo = view.findViewById(R.id.button_two)
+        buttonThree = view.findViewById(R.id.button_three)
 
 
-        /* TODO: Przypisz do poszczególnych przycisków instancje odbiornika (listenera), który zareaguje
+        /* DONE: Przypisz do poszczególnych przycisków instancje odbiornika (listenera), który zareaguje
            na wybranie przycisku. Efekt powinien polegać na wywołaniu metody onButtonPressed
            w ramach obiektu przypisanego do atrybutu mListener.
            W zależności od przycisku przekaż do metody odpowiedni parametr (1,2,3).
@@ -40,21 +43,32 @@ class MyFragmentMain : Fragment() {
 
            button.setOnClickListener { . . . }
          */
+        buttonOne?.setOnClickListener {
+            mListener?.onButtonPressed(1)
+        }
 
-        return view;
+        buttonTwo?.setOnClickListener {
+            mListener?.onButtonPressed(2)
+        }
+
+        buttonThree?.setOnClickListener {
+            mListener?.onButtonPressed(3)
+        }
+
+        return view
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        /* TODO: Usuń poniższy komentarz, aby do atrybutu mListener móc przypisać aktywność,
+        /* DONE: Usuń poniższy komentarz, aby do atrybutu mListener móc przypisać aktywność,
            która dołączyła bieżący fragment, weryfikując jednocześnie czy aktywność ta
            implementuje wymagany interfejs */
-        /*if (context is ButtonPressListener)
+        if (context is ButtonPressListener)
             mListener = context
         else
             throw ClassCastException("$context must implement ButtonPressListener interface")
-            */
+
     }
 
 
