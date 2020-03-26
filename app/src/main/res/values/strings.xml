@@ -8,4 +8,8 @@
     <string name="cancel">cancel</string>
     <string name="do_you_want_exit">Do you want exit</string>
     <string name="toast_text">This is toast</string>
+    <string name="green_channel_name">Green channel for notifications</string>
+    <string name="green_channel_description">Green channel description</string>
+    <string name="notification_title">To spare</string>
+    <string name="notification_text">Don\'t forget about me!</string>
 </resources>

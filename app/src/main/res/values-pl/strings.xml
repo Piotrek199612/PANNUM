@@ -8,4 +8,8 @@
     <string name="cancel">Anuluj</string>
     <string name="do_you_want_exit">Czy chcesz zamknąć aplikację?</string>
     <string name="toast_text">To jest toast</string>
+    <string name="green_channel_name">Zielony kanał dla powiadomień</string>
+    <string name="green_channel_description">Opis kanału zielonego</string>
+    <string name="notification_title">Na zapas!</string>
+    <string name="notification_text">Nie zapomnij o mnie!</string>
 </resources>

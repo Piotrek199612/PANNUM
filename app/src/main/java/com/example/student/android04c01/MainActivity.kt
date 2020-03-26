@@ -1,26 +1,72 @@
 package com.example.student.android04c01
 
-import android.app.AlertDialog
-import android.app.Dialog
+import android.app.*
+import android.content.Context
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.DialogFragment
 
 class MainActivity : AppCompatActivity() {
+    val GREEN_CHANNEL_ID = "com.example.student.android04c01.green_chanel";
+    val GREEN_NOTIFICATION_ID = 123
+    private var mManager: NotificationManager? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.green_channel_name)
+            val description = getString(R.string.green_channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(GREEN_CHANNEL_ID,name, importance)
+            channel.description = description
+            getNotificationManager()?.createNotificationChannel(channel)
+        }
 
         val toastButton:Button? = this.findViewById(R.id.create_toast_button)
         toastButton?.setOnClickListener {
             Toast.makeText(this, resources.getText(R.string.toast_text), Toast.LENGTH_LONG)
                 .show()
         }
+
+        val createNotificationButton:Button? = this.findViewById(R.id.create_notification_button)
+        createNotificationButton?.setOnClickListener {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                applicationContext,
+                0,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT
+            )
+
+            val bm = BitmapFactory.decodeResource(resources,R.drawable.oak)
+
+            val notBuilder = NotificationCompat.Builder(this, GREEN_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_wb_sunny_black_24dp)
+                .setLargeIcon(bm)
+                .setContentTitle(resources.getString(R.string.notification_title))
+                .setContentText(resources.getString(R.string.notification_text))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+
+            mManager?.notify(GREEN_NOTIFICATION_ID, notBuilder.build())
+        }
+
+        val updateNotificationButton:Button? = this.findViewById(R.id.update_notification_button)
+        updateNotificationButton?.setOnClickListener {
+            mManager?.cancel(GREEN_NOTIFICATION_ID)
+        }
+
     }
 
     override fun onBackPressed() {
@@ -52,5 +98,12 @@ class MainActivity : AppCompatActivity() {
                     .setNegativeButton(R.string.cancel) { _, _ ->  }
             return builder.create()
         }
+    }
+
+    private fun getNotificationManager(): NotificationManager?{
+        if (mManager == null) {
+            mManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        }
+        return mManager
     }
 }
