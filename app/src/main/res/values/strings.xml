@@ -3,4 +3,9 @@
     <string name="create_notification">Create notification</string>
     <string name="update_notification">Update notification</string>
     <string name="create_toast">Create toast</string>
+    <string name="close">Close</string>
+    <string name="yes">yes</string>
+    <string name="cancel">cancel</string>
+    <string name="do_you_want_exit">Do you want exit</string>
+    <string name="toast_text">This is toast</string>
 </resources>

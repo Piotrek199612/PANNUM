@@ -3,4 +3,9 @@
     <string name="create_notification">Utwórz powiadomienie</string>
     <string name="update_notification">Popraw powiadomienie</string>
     <string name="create_toast">Toast</string>
+    <string name="close">Zamknij</string>
+    <string name="yes">Tak</string>
+    <string name="cancel">Anuluj</string>
+    <string name="do_you_want_exit">Czy chcesz zamknąć aplikację?</string>
+    <string name="toast_text">To jest toast</string>
 </resources>
