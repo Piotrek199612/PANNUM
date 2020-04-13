@@ -1,11 +1,18 @@
 ﻿package com.example.kjankiewicz.android_05c02
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
+import android.support.v4.app.SupportActivity
+import android.support.v4.app.SupportActivity.ExtraData
+import android.support.v4.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 
 class MyMainActivity : AppCompatActivity() {
@@ -37,30 +44,49 @@ class MyMainActivity : AppCompatActivity() {
 
         letsGoButton = findViewById(R.id.letsGoButton)
         letsGoButton.setOnClickListener {
-            val intent = Intent()
+            var intent = Intent()
             when {
                 secondActivityRadioButton.isChecked -> {
-                    /* TODO: Uruchom aktywność MySecondActivity za pomocą jawnej intencji */
+                    /* DONE: Uruchom aktywność MySecondActivity za pomocą jawnej intencji */
+                    intent.setClassName(this@MyMainActivity,
+                            "com.example.kjankiewicz.android_05c02.MySecondActivity")
+                    startActivity(intent)
 
                 }
                 makeCalcRadioButton.isChecked -> {
-                    /* TODO: Uruchom aktywność aplikacji Android-05c01 umożliwiającą wykonywanie obliczeń.
+                    /* DONE: Uruchom aktywność aplikacji Android-05c01 umożliwiającą wykonywanie obliczeń.
                      * Przekaż jej parametr pochodzący z elementu aktywności
                      * dostępnego za pomocą atrybutu valueForCalcEditText
                      * jako kod żądania wykorzystaj stałą GET_CALC_RESULT.
                      * Skorzystaj intencji niejawnej - niech system sam dobierze właściwą aktywność na podstawie akcji */
-
+                    intent.action = "com.example.kjankiewicz.android_05c01.CALC"
+                    intent.putExtra("myX", Integer.parseInt(valueForCalcEditText.text.toString()))
+                    startActivityForResult(intent, GET_CALC_RESULT)
                 }
                 wwwPanumRadioButton.isChecked -> {
-                    /* TODO: Uruchom aktywność pozwalającą na oglądnięcie strony http://jankiewicz.pl/studenci/panum.html
+                    /* DONE: Uruchom aktywność pozwalającą na oglądnięcie strony http://jankiewicz.pl/studenci/panum.html
                     * Skorzystaj z intencji niejawnej
                     * W przypadku istnienia wielu komponentów mogących obsłużyć utworzoną intencję zapytaj użytkownika
                     * o właściwy komponent za pomocą okna dialogowego z tytułem "Otwórz stronę za pomocą..." */
 
+                    val myPage = Uri.parse("http://jankiewicz.pl/studenci/panum.html")
+                    intent.action = Intent.ACTION_VIEW
+                    intent.data = myPage
+                    if (intent.resolveActivity(packageManager) != null){
+                        intent = Intent.createChooser(intent, "Otwórz stronę za pomocą: ")
+                        startActivity(intent)
+                    }
                 }
                 wwwJRadioButton.isChecked -> {
-                    /* TODO: Uruchom aktywność pozwalającą na oglądnięcie strony http://jankiewicz.pl
+                    /* DONE: Uruchom aktywność pozwalającą na oglądnięcie strony http://jankiewicz.pl
                      * Skorzystaj z intencji niejawnej */
+                    val myPage = Uri.parse("http://jankiewicz.pl")
+                    intent.action = Intent.ACTION_VIEW
+                    intent.data = myPage
+                    if (intent.resolveActivity(packageManager) != null){
+                        startActivity(intent)
+                    }
+
 
                 }
             }
@@ -71,9 +97,9 @@ class MyMainActivity : AppCompatActivity() {
 
         if (resultCode == AppCompatActivity.RESULT_OK) {
             if (requestCode == GET_CALC_RESULT) {
-                /* TODO: Odbierz wynik z wywołanej aktywności
+                /* DONE: Odbierz wynik z wywołanej aktywności
                  * i wstaw go do elementu dostępnego za pomocą atrybutu valueForCalcEditText */
-
+                valueForCalcEditText.setText(data?.extras?.getInt("myX", 0).toString())
             }
         }
     }
