@@ -3,11 +3,15 @@
     package="com.example.kjankiewicz.android_05c01" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <permission android:name="com.example.kjankiewicz.android_05c01.MYWEBVIEW_PERMISSION"
+        android:label="@string/permission_label"
+        android:description="@string/permission_description"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/oak"
         android:label="@string/app_name"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MyCalcActivity"
@@ -23,10 +27,19 @@
         </activity>
         <activity
             android:name=".MyWebActivity"
-            android:label="@string/title_activity_my_web" >
-            <!-- TODO: Zdefiniuj filtr intencji pozwalający wykorzystywać aktywność do otwierania
+            android:label="@string/title_activity_my_web"
+            android:permission="com.example.kjankiewicz.android_05c01.MYWEBVIEW_PERMISSION">
+            <!-- DONE: Zdefiniuj filtr intencji pozwalający wykorzystywać aktywność do otwierania
                  stron internetowych o adresie URL zawierającym schemat "http" i
                  nazwę hosta "jankiewicz.pl" i ścieżki rozpoczynającej się od ciągu "studenci" -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="jankiewicz.pl"
+                    android:pathPattern="/studenci/.*"/>
+            </intent-filter>
         </activity>
     </application>
 

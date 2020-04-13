@@ -1,5 +1,6 @@
 package com.example.kjankiewicz.android_05c01
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
@@ -35,8 +36,9 @@ class MyCalcActivity : AppCompatActivity() {
             else -> myX * 2
         }
 
-        /* TODO: Zakończ działanie aktywności zwracając wynik obliczeń umieszczony w zmiennej myX */
-
+        /* DONE: Zakończ działanie aktywności zwracając wynik obliczeń umieszczony w zmiennej myX */
+        intent.putExtra("myX", myX)
+        setResult(Activity.RESULT_OK,intent)
         finish()
     }
 

@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_my_web">MyWebActivity</string>
-    <string name="permission_label">Permission to use the MyWebActivity activity</string>
-    <string name="permission_description">The permission used when displaying information from jankiewicz.pl/studenci as part of MyWebActivity</string>
+    <string name="permission_label">Uprawnienie do wykorzystywania aktywności MyWebActivity</string>
+    <string name="permission_description">Uprawnienie wykorzystywane podczas wyświetlania informacji ze strony jankiewicz.pl/studenciw ramach aktywności MyWebActivity</string>
 
 </resources>
