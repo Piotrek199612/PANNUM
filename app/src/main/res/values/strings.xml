@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Android-05c02</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="second">Second Activity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_my_second">MySecondActivity</string>
+    <string name="make_calc">Make calc.</string>
+    <string name="second_activity">Second Activity</string>
+    <string name="panum_page">PAnUM HomePage</string>
+    <string name="jankiewicz_homepage">jankiewicz HomePage</string>
+    <string name="value_for_calc">Value for calc.:</string>
+    <string name="def_value">2</string>
+    <string name="lets_go">Lets Go</string>
+
+</resources>
