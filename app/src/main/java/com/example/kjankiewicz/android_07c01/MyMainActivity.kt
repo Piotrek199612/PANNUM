@@ -39,41 +39,52 @@ class MyMainActivity : AppCompatActivity() {
 
             mProjection = arrayOf(CallLog.Calls._ID, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DATE, CallLog.Calls.DURATION)
 
-            /*TODO: Utwórz zmienne mSelection i mSelectionArgs definiujące warunek ograniczający pobierane
+            /*DONE: Utwórz zmienne mSelection i mSelectionArgs definiujące warunek ograniczający pobierane
             * dane tylko do tych, które zawierają połączenia przychodzące.
             * Nie interesują nas wszystkie połączenia.
             * Warunek selecji powinien ostatecznie mieć postać "TYPE = 'przychodzące'"
             * Do stworzenia warunku wykorzystaj zarówno definicję warunku (mSelection) jak i wartości argumentów warunku (mSelectionArgs)
             * Rzeczywistą wartość kolumny TYPE uzyskaj z klasy kontraktu CallLog.Calls */
-            mSelection = " = ? "
+            mSelection = CallLog.Calls.TYPE + " = ? "
 
             /*Rzeczywistą wartość typu połączeń 'przychodzące' uzyskaj także z tej klasy (przeglądnij dostępne tam stałe)
             * zamień poniższą wartość -1 na odpowiednią stałą ze wspomnianej klasy*/
-            val mSelectionArgs = arrayOf(Integer.toString(-1))
+            val mSelectionArgs = arrayOf(Integer.toString(CallLog.Calls.INCOMING_TYPE))
 
-            /*TODO: Utwórz zmienną mOrderBy zawierającą klauzulę sortującą połączenia od najnowszych do najstarszych
+            /*DONE: Utwórz zmienną mOrderBy zawierającą klauzulę sortującą połączenia od najnowszych do najstarszych
             * Użyj właściwej stałej klasy kontraktu dla kolumny zawierającej datę */
-            mOrderBy = ""
+            mOrderBy = CallLog.Calls.DATE + " DESC"
 
-            /*TODO Utwórz cursor pozwalający na dostęp do wykonanych połączeń.
+            /*DONE Utwórz cursor pozwalający na dostęp do wykonanych połączeń.
             * Skorzystaj z powyżej zdefniowanych zmiennych.
             * Zaglądnij na stronę https://developer.android.com/reference/android/provider/CallLog.Calls.html
             * aby poznać właściwą stałą zawierającą URI "tabeli" z informacjami o połączeniach  */
-            callsCursor = null
+            callsCursor = contentResolver.query(
+                    CallLog.Calls.CONTENT_URI,
+                    mProjection,
+                    mSelection,
+                    mSelectionArgs,
+                    mOrderBy)
 
             /* Lista kolumn, którą chcemy wyświetlić w ramach ListView */
             val callsListColumns = arrayOf(CallLog.Calls.NUMBER, CallLog.Calls.DATE)
 
-            /*TODO: Zdefiniuj tablicę wskazującą na elementy, z rozkładu my_calls_row.xml,
+            /*DONE: Zdefiniuj tablicę wskazującą na elementy, z rozkładu my_calls_row.xml,
             *  które są przeznaczone do wyświetlenia powyższych kolumn  */
-            callsListItems = intArrayOf()
+            callsListItems = intArrayOf(R.id.callNumberView, R.id.callDateView)
 
 
-            /*TODO: Utwórz obiekt adaptera pozwalający na wyświetlanie danych z kursora callsCursor
+            /*DONE: Utwórz obiekt adaptera pozwalający na wyświetlanie danych z kursora callsCursor
              * przy wykorzystaniu pliku rozkładu my_calls_row.xml,
              * wyświetający listę kolumn wskazaną w zmiennej callsListColumns
              * za pomocą składowych rozkładu zdefiniowanych w zmiennej callsListItems */
-            callsCursorAdapter = null
+            callsCursorAdapter = SimpleCursorAdapter(
+                    applicationContext,
+                    R.layout.my_calls_row,
+                    callsCursor,
+                    callsListColumns,
+                    callsListItems,
+                    0)
 
             val callsListView = findViewById<ListView>(R.id.callsListView)
 
