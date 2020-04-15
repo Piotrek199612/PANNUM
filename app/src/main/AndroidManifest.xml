@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.example.kjankiewicz.android_07c01" >
+
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/oak"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MyMainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MyPracownicyActivity"
+            android:label="@string/title_activity_my_pracownicy" >
+        </activity>
+        <provider
+            android:name=".PracZespEtatContentProvider"
+            android:authorities="com.example.kjankiewicz.android_07c01.praczespetat"
+            android:permission="com.example.kjankiewicz.android_07c01.praczespetat.permission.GLOBAL"
+            android:readPermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.READ"
+            android:writePermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.WRITE"
+            android:enabled="true"
+            android:exported="true" >
+            <path-permission
+                android:pathPrefix="/zespoly"
+                android:permission="com.example.kjankiewicz.android_07c01.praczespetat.permission.ZESPOLY_GLOBAL"
+                android:readPermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.ZESPOLY_READ"
+                android:writePermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.ZESPOLY_WRITE"/>
+            <path-permission
+                android:pathPrefix="/etaty"
+                android:permission="com.example.kjankiewicz.android_07c01.praczespetat.permission.ETATY_GLOBAL"
+                android:readPermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.ETATY_READ"
+                android:writePermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.ETATY_WRITE"/>
+            <path-permission
+                android:pathPrefix="/pracownicy"
+                android:permission="com.example.kjankiewicz.android_07c01.praczespetat.permission.PRACOWNICY_GLOBAL"
+                android:readPermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.PRACOWNICY_READ"
+                android:writePermission="com.example.kjankiewicz.android_07c01.praczespetat.permission.PRACOWNICY_WRITE"/>
+        </provider>
+    </application>
+
+</manifest>

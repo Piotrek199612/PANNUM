@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MyMainActivity" >
+    <item android:id="@+id/activity_my_pracownicy"
+        android:title="@string/title_activity_my_pracownicy"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+</menu>

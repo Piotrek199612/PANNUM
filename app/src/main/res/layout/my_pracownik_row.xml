@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent" android:layout_height="match_parent">
+    <!--TODO: Zdefiniuj zawartość pliku układu widoków pozwalajacego na prezentacje
+        nazwisk i etatów pracowników.
+        - Dla ułatwienia skorzystaj z pliku rozkładu my_calls_row.xml.
+        - Dostosuj odpowiednio identyfikaty składowych zgodnie z użyciem
+          tego pliku rozkładu w ramach aktywności klasy MyPracownicyActivity  -->
+
+</RelativeLayout>
