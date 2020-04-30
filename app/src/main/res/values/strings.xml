@@ -4,6 +4,6 @@
     <string name="clear">clear</string>
     <string name="show">show</string>
     <string name="textview">textview</string>
-    <string name="default_frequency">default_frequency</string>
+    <string name="default_frequency">5</string>
     <string name="frequency">frequency</string>
 </resources>
