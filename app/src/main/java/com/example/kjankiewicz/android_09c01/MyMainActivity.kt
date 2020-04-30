@@ -13,12 +13,16 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.activity_my_main.*
+import java.lang.ref.WeakReference
 
 
 class MyMainActivity : Activity() {
 
     private lateinit var downloadedBitmaps: Array<Bitmap?>
     private var bitmapToShow: Int = 0
+
+    lateinit var slideShowHandler: Handler
+    lateinit var slideShowRunnable: Runnable
 
     internal var slideShowOk: Boolean? = true
 
@@ -36,42 +40,34 @@ class MyMainActivity : Activity() {
         slideShowProgressBar.max = filesToDownload.size
         slideShowProgressBar.progress = 0
 
-        downloadedBitmaps = downloadFiles(filesToDownload)
 
-        doSlideShow()
+        val downloadBitmaps = DownloadBitmaps(this)
+        downloadBitmaps.execute(*filesToDownload)
 
     }
 
-    private fun downloadFiles(files: Array<Int>): Array<Bitmap?> {
-        val myBitmaps = arrayOfNulls<Bitmap>(files.size)
-
-        for (i in files.indices) {
-            myBitmaps[i] = BitmapFactory.decodeResource(resources, files[i])
-            try {
-                Thread.sleep(5000)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-
-            slideShowProgressBar.progress = i + 1
-        }
-
-        return myBitmaps
-    }
-
-    fun doSlideShow() {
-        while (true) {
+    fun newDoSlideShow() {
+        slideShowRunnable = Runnable {
             slideShowImageView.setImageBitmap(downloadedBitmaps[bitmapToShow])
-            try {
-                Thread.sleep(5000)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-
             bitmapToShow++
-            if (bitmapToShow == downloadedBitmaps.size)
-                bitmapToShow = 0
+            if (bitmapToShow >= downloadedBitmaps.size) bitmapToShow = 0
         }
+        slideShowHandler = Handler()
+        val thread = object : Thread() {
+            override fun run() {
+
+                try {
+                    while (true) {
+                        sleep(5000)
+                        /* TODO: Wyślij do obiektu klasy Handler stosowne zadanie */
+                        slideShowHandler.post(slideShowRunnable)
+                    }
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        thread.start()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -90,21 +86,40 @@ class MyMainActivity : Activity() {
         } else super.onOptionsItemSelected(item)
     }
 
-    class DownloadBitmaps(): AsyncTask<Int, Int, Array<Bitmap>>() {
+    class DownloadBitmaps(activity: MyMainActivity) : AsyncTask<Int, Int, Array<Bitmap?>>() {
+        private val mMainActivity = WeakReference(activity)
 
-        override fun doInBackground(vararg files: Int?): Array<Bitmap>? {
+        override fun doInBackground(vararg files: Int?): Array<Bitmap?>? {
             /* TODO: Zaimplementuj "pobieranie" plików do wnętrza tablicy bitmap
              * Po "pobraniu" każdego z plików wywołaj stosowną metodę umożliwiając
              * informowanie użytkownika o postępie */
+            val myBitmaps = arrayOfNulls<Bitmap?>(files.size)
+            val activity = mMainActivity.get()
+            if (activity == null || activity.isFinishing) return null
 
-            return null
+            for (i in files.indices) {
+                myBitmaps[i] = BitmapFactory.decodeResource(activity.resources, files[i]!!)
+                try {
+                    Thread.sleep(5000)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+
+                publishProgress(i + 1)
+            }
+            return myBitmaps
         }
 
-        override fun onPostExecute(result: Array<Bitmap>) {
+        override fun onPostExecute(result: Array<Bitmap?>) {
             /* TODO: Przypisz do atrybutu downloadedBitmaps wynik
              * działania metody doInBackground()
              * Wyzeruj zmienną bitmapToShow */
+            val activity = mMainActivity.get()
+            if (activity == null || activity.isFinishing) return
 
+            activity.downloadedBitmaps = result
+            activity.bitmapToShow = 0
+            activity.newDoSlideShow()
         }
 
         override fun onProgressUpdate(vararg values: Int?) {
@@ -113,6 +128,9 @@ class MyMainActivity : Activity() {
              * doInBackground()
              * Wykorzystaj do tego celu pasek postępu */
 
+            val activity = mMainActivity.get()
+            if (activity == null || activity.isFinishing) return
+            activity.slideShowProgressBar.progress = values[0]!!
         }
     }
 
