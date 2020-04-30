@@ -6,4 +6,5 @@
     <string name="textview">textview</string>
     <string name="default_frequency">5</string>
     <string name="frequency">frequency</string>
+    <string name="NotificationActivityMessage">Notification</string>
 </resources>

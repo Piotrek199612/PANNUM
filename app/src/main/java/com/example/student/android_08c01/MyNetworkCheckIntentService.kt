@@ -2,12 +2,18 @@ package com.example.student.android_08c01
 
 import android.annotation.TargetApi
 import android.app.IntentService
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import java.io.FileOutputStream
 
 // TODO: Rename actions, choose action names that describe tasks that this
@@ -29,6 +35,10 @@ const val NETWORK_HISTORY_LOG = "network_history.log"
  */
 class MyNetworkCheckIntentService : IntentService("MyNetworkCheckIntentService") {
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        makeMeForeground()
+        return super.onStartCommand(intent, flags, startId)
+    }
     override fun onHandleIntent(intent: Intent?) {
         when (intent?.action) {
             ACTION_FOO -> {
@@ -42,6 +52,45 @@ class MyNetworkCheckIntentService : IntentService("MyNetworkCheckIntentService")
                 handleActionBaz(param1, param2)
             }
         }
+    }
+
+    private fun makeMeForeground() {
+        val notBuilder: NotificationCompat.Builder
+
+        val bm = BitmapFactory.decodeResource(
+            resources,
+            R.drawable.oak_foreground)
+
+        val channelId =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createNotificationChannel()
+            } else {
+                ""
+            }
+
+        notBuilder = NotificationCompat.Builder(
+            this, channelId)
+            .setContentTitle("Foreground")
+            .setContentText("Notification for Foreground Service")
+            .setSmallIcon(R.drawable.oak_foreground)
+            .setLargeIcon(bm)
+            .setAutoCancel(false)
+
+        startForeground(MainActivity.MY_NOTIFICATION_ID,
+            notBuilder.build())
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(): String {
+
+        val channelId = "PlayerServiceChannel"
+        val channelName = "Player Service Channel"
+        val channel = NotificationChannel(channelId,
+            channelName, NotificationManager.IMPORTANCE_DEFAULT)
+        val notificationManager = getSystemService(
+            Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+        return channelId
     }
 
     /**

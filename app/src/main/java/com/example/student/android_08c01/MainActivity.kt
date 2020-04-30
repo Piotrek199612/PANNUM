@@ -9,6 +9,9 @@ import java.io.File
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        var MY_NOTIFICATION_ID = 1998
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
