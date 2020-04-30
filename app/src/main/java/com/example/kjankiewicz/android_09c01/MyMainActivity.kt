@@ -2,6 +2,8 @@ package com.example.kjankiewicz.android_09c01
 
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,8 +12,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.activity_my_main.*
 import java.lang.ref.WeakReference
 
@@ -24,13 +24,12 @@ class MyMainActivity : Activity() {
     lateinit var slideShowHandler: Handler
     lateinit var slideShowRunnable: Runnable
 
-    internal var slideShowOk: Boolean? = true
+    internal var slideShowOk: Boolean = true
 
     internal var batteryStatusReceiver: BroadcastReceiver? = null
 
     internal var batteryIntentFilter: IntentFilter? = null
 
-    internal var myBitmaps: Array<Bitmap>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +43,21 @@ class MyMainActivity : Activity() {
         val downloadBitmaps = DownloadBitmaps(this)
         downloadBitmaps.execute(*filesToDownload)
 
+        batteryStatusReceiver = MyBroadcastReceiver()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        batteryIntentFilter = IntentFilter()
+        batteryIntentFilter?.addAction(Intent.ACTION_BATTERY_OKAY)
+        batteryIntentFilter?.addAction(Intent.ACTION_BATTERY_LOW)
+        registerReceiver(batteryStatusReceiver, batteryIntentFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(batteryStatusReceiver)
     }
 
     fun newDoSlideShow() {
@@ -59,8 +73,9 @@ class MyMainActivity : Activity() {
                 try {
                     while (true) {
                         sleep(5000)
-                        /* TODO: Wyślij do obiektu klasy Handler stosowne zadanie */
-                        slideShowHandler.post(slideShowRunnable)
+                        /* DONE: Wyślij do obiektu klasy Handler stosowne zadanie */
+                        if (slideShowOk)
+                            slideShowHandler.post(slideShowRunnable)
                     }
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
@@ -86,11 +101,23 @@ class MyMainActivity : Activity() {
         } else super.onOptionsItemSelected(item)
     }
 
+    inner class MyBroadcastReceiver :BroadcastReceiver (){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent?.action
+
+            if (action == Intent.ACTION_BATTERY_OKAY)
+                slideShowOk = true
+            else if (action == Intent.ACTION_BATTERY_LOW)
+                slideShowOk = false
+        }
+
+    }
+
     class DownloadBitmaps(activity: MyMainActivity) : AsyncTask<Int, Int, Array<Bitmap?>>() {
         private val mMainActivity = WeakReference(activity)
 
         override fun doInBackground(vararg files: Int?): Array<Bitmap?>? {
-            /* TODO: Zaimplementuj "pobieranie" plików do wnętrza tablicy bitmap
+            /* DONE: Zaimplementuj "pobieranie" plików do wnętrza tablicy bitmap
              * Po "pobraniu" każdego z plików wywołaj stosowną metodę umożliwiając
              * informowanie użytkownika o postępie */
             val myBitmaps = arrayOfNulls<Bitmap?>(files.size)
@@ -111,7 +138,7 @@ class MyMainActivity : Activity() {
         }
 
         override fun onPostExecute(result: Array<Bitmap?>) {
-            /* TODO: Przypisz do atrybutu downloadedBitmaps wynik
+            /* DONE: Przypisz do atrybutu downloadedBitmaps wynik
              * działania metody doInBackground()
              * Wyzeruj zmienną bitmapToShow */
             val activity = mMainActivity.get()
@@ -124,7 +151,7 @@ class MyMainActivity : Activity() {
 
         override fun onProgressUpdate(vararg values: Int?) {
             super.onProgressUpdate(*values)
-            /* TODO: Poinformuj użytkownika o postępie prac w metodzie
+            /* DONE: Poinformuj użytkownika o postępie prac w metodzie
              * doInBackground()
              * Wykorzystaj do tego celu pasek postępu */
 
