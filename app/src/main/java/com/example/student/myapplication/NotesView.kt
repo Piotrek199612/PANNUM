@@ -1,6 +1,5 @@
 package com.example.student.myapplication
 
-import MyAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color

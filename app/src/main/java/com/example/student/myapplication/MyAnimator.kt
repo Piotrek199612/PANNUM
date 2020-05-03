@@ -1,4 +1,4 @@
-import com.example.student.myapplication.NotesView
+package com.example.student.myapplication
 
 import android.animation.ObjectAnimator
 import android.view.animation.LinearInterpolator

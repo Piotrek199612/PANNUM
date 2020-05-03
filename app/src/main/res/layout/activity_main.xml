@@ -35,5 +35,11 @@
             app:markPosition="0" />
     </HorizontalScrollView>
 
+    <GridView
+        android:id="@+id/songsGridView"
+        android:layout_width="409dp"
+        android:layout_height="308dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
