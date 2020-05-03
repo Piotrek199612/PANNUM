@@ -1,14 +1,16 @@
 package com.example.student.myapplication
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.material.navigation.NavigationView
 
-class PracownikAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.my_song_row) {
+class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.my_song_row) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val song = getItem(position)
@@ -32,12 +34,11 @@ class PracownikAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.la
 
         val coverView = view!!.findViewById<ImageView>(R.id.coverView)
         context.resources.getIdentifier(song.coverResourceName, "drawable", context.packageName)
-        coverView.setImageResource(
-            R.drawable.sevennationarmy)
 
+        val coverId = context.resources.getIdentifier(song.songResourceName, "drawable", context?.packageName)
+        coverView.setImageResource(coverId)
 
-
-
-        return view!!
+        return view
     }
+
 }

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+
+    <string name="nav_header_title">Bass master</string>
+    <string name="nav_header_subtitle">piotr.sturmer@gmail.com</string>
+    <string name="nav_header_desc">Description</string>
+
+    <string name="played_song">Song Played</string>
+    <string name="song_chooser">Choose Song</string>
 </resources>

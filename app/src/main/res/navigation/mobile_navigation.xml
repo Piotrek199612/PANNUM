@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_song_chooser">
+
+    <fragment
+        android:id="@+id/nav_song_chooser"
+        android:name="com.example.student.myapplication.SongChooserFragment"
+        android:label="@string/song_chooser"
+        tools:layout="@layout/song_chooser_fragment" >
+        <action
+            android:id="@+id/action_nav_song_chooser_to_nav_played_song"
+            app:destination="@id/nav_played_song" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_played_song"
+        android:name="com.example.student.myapplication.PlayedSongFragment"
+        android:label="@string/played_song"
+        tools:layout="@layout/played_song_fragment" >
+        <argument
+            android:name="artist"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="songResourceName"
+            app:argType="string" />
+    </fragment>
+
+</navigation>
