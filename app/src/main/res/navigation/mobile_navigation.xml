@@ -28,6 +28,15 @@
         <argument
             android:name="songResourceName"
             app:argType="string" />
+        <argument
+            android:name="coverResourceName"
+            app:argType="string" />
+        <argument
+            android:name="notes"
+            app:argType="string" />
+        <argument
+            android:name="tacts"
+            app:argType="string" />
     </fragment>
 
 </navigation>

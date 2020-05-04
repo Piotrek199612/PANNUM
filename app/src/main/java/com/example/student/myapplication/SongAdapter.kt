@@ -19,7 +19,6 @@ class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.
         if(view == null)
             view = LayoutInflater.from(context).inflate(R.layout.my_song_row, parent, false)
 
-//        TODO: odkomentuj poniższy kod po ukończeniu TODO w pliku my_pracownik_row
         val artistTv = view!!.findViewById<TextView>(R.id.artistText)
             artistTv.text = song!!.artist
 
@@ -35,7 +34,7 @@ class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.
         val coverView = view!!.findViewById<ImageView>(R.id.coverView)
         context.resources.getIdentifier(song.coverResourceName, "drawable", context.packageName)
 
-        val coverId = context.resources.getIdentifier(song.songResourceName, "drawable", context?.packageName)
+        val coverId = context.resources.getIdentifier(song.coverResourceName, "drawable", context.packageName)
         coverView.setImageResource(coverId)
 
         return view

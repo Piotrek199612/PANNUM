@@ -4,17 +4,14 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.media.MediaPlayer
 import android.util.AttributeSet
-import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.HorizontalScrollView
 
 class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private var markPosition = 0
-    private val space = 100//250
+    private val space = 0.5f//250
 
     private val paint = Paint()
     private val linePaint = Paint()
@@ -23,10 +20,9 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val textPaint = Paint()
     private val tactNumberPaint = Paint()
 
-    private lateinit var notes: Array<List<String>>
+    private lateinit var notes: Array<List<Int>>
     private lateinit var tacts: Array<Int>
 
-    private var numberOfNotes = 0//notes[0].size
     var totalLength = 0
 
     val start = 500//((parent as HorizontalScrollView).width *0.3 ).toInt()
@@ -39,22 +35,11 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         initPaints()
     }
 
-    private lateinit  var mediaPlayer: MediaPlayer
-    fun setMediaPlayer(player:MediaPlayer){
-        mediaPlayer  = player
-    }
-    private lateinit  var myAnimator: MyAnimator
-     fun setMyAnimator(animator:MyAnimator){
-        myAnimator  = animator
-    }
-
     fun setMarkPosition(value:Int)
     {
         val horizontalScroll = parent as HorizontalScrollView
         if (markPosition != value) {
             horizontalScroll.scrollX = value
-            Log.w("MARK POSITION", horizontalScroll.scrollX.toString())
-            Log.w("MARK POSITION Value", value.toString())
             horizontalScroll.invalidate()
             markPosition = value
             invalidate()
@@ -106,49 +91,45 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
         for (i in 0..3){
             canvas.drawLine(0f, topBottomMargin + i*spaceBetweenLines, width.toFloat(), topBottomMargin + i*spaceBetweenLines, linePaint)
-            drawNotes(canvas, i, topBottomMargin + i*spaceBetweenLines + 20)
         }
 
+        drawNotes(canvas, topBottomMargin+ 20, spaceBetweenLines )
 
 
-
-        for ((tactNumber, i) in tacts.withIndex()){
-            canvas.drawLine((start + i*space - 80).toFloat(), 0f ,(start + i*space - 80).toFloat(), height.toFloat(), tactPaint)
-            canvas.drawText( (tactNumber+1).toString(), (start + i*space - 80).toFloat(), 50f , tactNumberPaint)
+        tacts.forEach {
+            canvas.drawLine((it * space + start) - 40, 0f ,(it * space + start) - 40, height.toFloat(), tactPaint)
         }
 
         canvas.drawLine((markPosition + start).toFloat() + 30, 0f ,( markPosition + start).toFloat()+ 30, height.toFloat(), markPaint)
     }
 
-    private fun drawNotes(canvas: Canvas, index:Int, y: Float) {
-        val horizontalScroll = parent as HorizontalScrollView
-        notes[index].forEachIndexed { i, note ->
-            if ((i * space + start + 100) > horizontalScroll.scrollX && (i * space + start - 100) < horizontalScroll.scrollX +horizontalScroll.width ) {
-                var value = note
-                if (note == "-1") value = ""
-                canvas.drawText(value, (i * space + start).toFloat(), y, textPaint)
-            }
+    private fun drawNotes(canvas: Canvas, marginTop:Int, spaceBetween: Float) {
+        notes.forEach { note ->
+            val string = note[0]
+            val fret = note[1]
+            val time = note[2]
+            canvas.drawText(fret.toString(), (time * space + start), string*spaceBetween + marginTop, textPaint)
         }
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val height = 500
         val displayMetrics = context.resources.displayMetrics
-        setMeasuredDimension((start + numberOfNotes * space + (displayMetrics.widthPixels - start)), height)
+        setMeasuredDimension((start + totalLength + (displayMetrics.widthPixels - start)), height)
         setMarkPosition(markPosition)
     }
 
 
-    fun setNotes(notes: Array<List<String>>){
+    fun setNotes(notes: Array<List<Int>>){
         this.notes = notes
-        this.numberOfNotes = notes[0].size
-        this.totalLength = numberOfNotes * space
     }
 
-    fun setTactc(tacts: Array<Int>){
+    fun setTacts(tacts: Array<Int>) {
         this.tacts = tacts
     }
 
+    fun setLength(millis: Int){
+        totalLength = (millis*space).toInt()
+    }
 }

@@ -1,19 +1,20 @@
 package com.example.student.myapplication
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
 @Entity
 data class SongEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
 
     val artist: String,
     val title: String,
     val year: Int,
-    val played: Int,
+    @ColumnInfo(defaultValue = "0") val played: Int = 0,
     val notes: String,
+    val tacts: String,
     val songResourceName: String,
     val coverResourceName: String
 )

@@ -1,19 +1,15 @@
 package com.example.student.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.view.*
 import com.google.android.material.navigation.NavigationView
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.NavHostFragment
 
 
 
@@ -28,12 +24,10 @@ class SongChooserFragment : Fragment() {
         }
     }
 var dataAdded = false
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        //setHasOptionsMenu(true)
+
         val view = inflater.inflate(R.layout.song_chooser_fragment, container, false)
         val adapter = context?.let { SongAdapter(it) }
 
@@ -49,7 +43,7 @@ var dataAdded = false
         val button = view.findViewById<Button>(R.id.chooserButton)
         button.setOnClickListener{
             dataAdded = if (dataAdded) {
-                viewModel.addDefaultData()
+                viewModel.addDefaultData(context!!.assets)
                 false
             } else{
                 viewModel.deteleAllSongs()
@@ -66,7 +60,7 @@ var dataAdded = false
         val playSongItem = navigationView.menu.findItem(R.id.nav_played_song)
         playSongItem.isEnabled = true
 
-        gridView.setOnItemClickListener { parent, view, position, id ->
+        gridView.setOnItemClickListener { _, view, position, _ ->
             playSongItem.isEnabled = true
             playSongItem.isVisible = true
 
@@ -75,7 +69,10 @@ var dataAdded = false
             val args = bundleOf(
                 "artist" to song.artist,
                 "title" to song.title,
-                "songResourceName" to song.songResourceName
+                "notes" to song.notes,
+                "tacts" to song.tacts,
+                "songResourceName" to song.songResourceName,
+                "coverResourceName" to song.coverResourceName
             )
             findNavController().navigate(R.id.nav_played_song, args)
         }

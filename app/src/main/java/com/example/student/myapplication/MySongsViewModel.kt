@@ -1,36 +1,34 @@
 package com.example.student.myapplication
 
+import android.content.res.AssetManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.w3c.dom.NodeList
+import java.lang.StringBuilder
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
 
 class MySongsViewModel: ViewModel() {
 
     private val songDao by lazy { MyApplication.appDatabase.songDao() }
 
-    fun addDefaultData() {
-        val idSongTab = arrayOf(100, 110, 120, 130, 140, 150, 160, 170, 190, 180, 200, 210, 220, 230)
-        val artistTab = arrayOf("Muse", "The White stripes", "Nothing but thieves", "Rammstein", "ASDADSDSSADASDASD", "KROLIKOWSKI", "KOSZLAJDA", "JEZIERSKI", "MATYSIAK", "MAREK", "ZAKRZEWICZ", "BIALY", "KONOPKA", "HAPKE")
-        val titleTab = arrayOf("Muscle museum", "Seven nation army", "Trip switch", "Ohne dich", "PROFESOR", "ADIUNKT", "ADIUNKT", "ASYSTENT", "ASYSTENT", "SEKRETARKA", "STAZYSTA", "STAZYSTA", "ASYSTENT", "ASYSTENT")
-        val yearTab = arrayOf(1730, 1350, 1070, 960, 830, 645, 590, 439,371, 410, 208, 250, 480, 480)
-        val playedTab = arrayOf(1730, 1350, 1070, 960, 830, 645, 590, 439,371, 410, 208, 250, 480, 480)
-        val notesTab = arrayOf("WEGLARZ", "BLAZEWICZ", "SLOWINSKI", "BRZEZINSKI", "MORZY", "KROLIKOWSKI", "KOSZLAJDA", "JEZIERSKI", "MATYSIAK", "MAREK", "ZAKRZEWICZ", "BIALY", "KONOPKA", "HAPKE")
-        val songResourceName = arrayOf("musclemuseum", "sevennationarmy", "tripswitch", "starlight", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy")
-        val coverResourceName = arrayOf("musclemuseum", "sevennationarmy", "tripswitch", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy", "sevennationarmy")
-
+    fun addDefaultData(assets: AssetManager) {
         val defaultData = mutableListOf<SongEntity>()
-        for (i in idSongTab.indices) {
-            defaultData.add(SongEntity(idSongTab[i],artistTab[i],titleTab[i],yearTab[i], playedTab[i], notesTab[i], songResourceName[i], coverResourceName[i]))
+        val files = arrayOf("text.xml")
+        for (i in files.indices) {
+            defaultData.add(parseSongXML(i, files[i], assets))
         }
+
         viewModelScope.launch {
             withContext(Dispatchers.IO){
-            songDao.insert(defaultData)
+                songDao.insert(defaultData)
             }
         }
-//        TODO: uwórz korutynę wstawiająca domyślne dane do bazy danych, skorzystaj z obiekty viewModelScope.launch{ }
     }
 
     fun getAllSongs(): LiveData<List<SongEntity>> =
@@ -43,5 +41,58 @@ class MySongsViewModel: ViewModel() {
                 songDao.removeAll()
             }
         }
+    }
+
+
+
+    fun parseSongXML(id:Int, filePath:String, assets: AssetManager) :SongEntity{
+        val istream = assets.open(filePath)
+        val builderFactory = DocumentBuilderFactory.newInstance()
+        val docBuilder = builderFactory.newDocumentBuilder()
+        val doc = docBuilder.parse(istream)
+
+
+        val title = doc.getElementsByTagName("title").item(0).firstChild.nodeValue
+        val artist = doc.getElementsByTagName("artistName").item(0).firstChild.nodeValue
+        val year = doc.getElementsByTagName("albumYear").item(0).firstChild.nodeValue.toInt()
+        val songResourceName = title.replace(" ", "").toLowerCase()
+        val album = doc.getElementsByTagName("albumName").item(0).firstChild.nodeValue
+        val coverResourceName = album.replace(" ", "").toLowerCase()
+
+        val xpath = XPathFactory.newInstance().newXPath()
+        val expr = xpath.compile("//transcriptionTrack/notes/*")
+        val notes = expr.evaluate(doc, XPathConstants.NODESET) as NodeList
+
+        val notesString = StringBuilder()
+        for (i in 0 until notes.length){
+            val time = (notes.item(i).attributes.getNamedItem("time").nodeValue.toFloat()*1000).toInt()
+            val fret = notes.item(i).attributes.getNamedItem("fret").nodeValue
+            val string = notes.item(i).attributes.getNamedItem("string").nodeValue
+
+            notesString.append("$string,$fret,$time")
+            if (i != notes.length-1)
+                notesString.append(";")
+        }
+
+        val xpathTacts = XPathFactory.newInstance().newXPath()
+        val exprTacts = xpathTacts.compile("//ebeats/*[@measure != '-1']")
+        val tacts = exprTacts.evaluate(doc, XPathConstants.NODESET) as NodeList
+
+        val tactsString = StringBuilder()
+        for (i in 0 until tacts.length){
+            val time = (tacts.item(i).attributes.getNamedItem("time").nodeValue.toFloat()*1000).toInt()
+            tactsString.append("$time")
+            if (i != tacts.length-1)
+                tactsString.append(";")
+        }
+
+        return SongEntity(
+            artist=artist,
+            title=title,
+            year=year,
+            notes = notesString.toString(),
+            tacts = tactsString.toString(),
+            songResourceName = songResourceName,
+            coverResourceName = coverResourceName)
     }
 }
