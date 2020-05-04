@@ -64,6 +64,7 @@ class PlayedSongFragment : Fragment() {
 
         val a = arrayListOf<List<Int>>()
         singleNotes.forEach { a.add(it.split(',').map { it.toInt() } ) }
+        notes = arrayOf(listOf(0,0,0))
         notes = a.toArray(notes)
 
         myView.setNotes(notes)

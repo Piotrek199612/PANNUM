@@ -16,10 +16,10 @@ import javax.xml.xpath.XPathFactory
 class MySongsViewModel: ViewModel() {
 
     private val songDao by lazy { MyApplication.appDatabase.songDao() }
-
+    
     fun addDefaultData(assets: AssetManager) {
         val defaultData = mutableListOf<SongEntity>()
-        val files = arrayOf("text.xml")
+        val files = arrayOf("starlight.xml", "sevennationarmy.xml", "tripswitch.xml")
         for (i in files.indices) {
             defaultData.add(parseSongXML(i, files[i], assets))
         }
@@ -60,7 +60,7 @@ class MySongsViewModel: ViewModel() {
         val coverResourceName = album.replace(" ", "").toLowerCase()
 
         val xpath = XPathFactory.newInstance().newXPath()
-        val expr = xpath.compile("//transcriptionTrack/notes/*")
+        val expr = xpath.compile("//level[not(@difficulty < //level/@difficulty)]/notes/*")
         val notes = expr.evaluate(doc, XPathConstants.NODESET) as NodeList
 
         val notesString = StringBuilder()
