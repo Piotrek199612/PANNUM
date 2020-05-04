@@ -11,8 +11,14 @@ import com.google.android.material.navigation.NavigationView
 import android.widget.GridView
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
-
-
+import android.widget.AdapterView
+import android.view.ContextMenu.ContextMenuInfo
+import android.view.ContextMenu
+import android.widget.AdapterView.AdapterContextMenuInfo
+import android.widget.Toast
+import androidx.core.view.get
+import kotlinx.android.synthetic.main.my_song_row.view.*
+import kotlinx.android.synthetic.main.song_chooser_fragment.*
 
 
 class SongChooserFragment : Fragment() {
@@ -34,6 +40,7 @@ var dataAdded = false
 
         val gridView = view.findViewById<GridView>(R.id.songsGridView)
         gridView.adapter = adapter
+        registerForContextMenu(gridView)
 
         viewModel.getAllSongs().observe(viewLifecycleOwner, Observer<List<SongEntity>> {
             adapter!!.clear()
@@ -78,11 +85,22 @@ var dataAdded = false
             findNavController().navigate(R.id.nav_played_song, args)
         }
 
-        gridView.setOnItemLongClickListener{ _, view, position, _ ->
-            Log.w("Sturmer", "Item pressed");true
-        }
-
         return view
     }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        activity?.menuInflater?.inflate(R.menu.song_pressed_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val info = item.menuInfo as AdapterContextMenuInfo
+        val song = songsGridView.adapter.getItem(info.id.toInt()) as SongEntity
+        viewModel.removeSong(song)
+        val toast = Toast.makeText(context, "Song succesfully removed", Toast.LENGTH_SHORT)
+        toast.show()
+        return true
+    }
+
 
 }

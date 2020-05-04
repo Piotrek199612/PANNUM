@@ -16,4 +16,7 @@ interface SongDao {
 
     @Query("DELETE FROM songentity")
     fun removeAll()
+
+    @Delete
+    fun removeSong(song: SongEntity)
 }

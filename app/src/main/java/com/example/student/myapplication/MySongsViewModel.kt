@@ -39,6 +39,14 @@ class MySongsViewModel: ViewModel() {
         }
     }
 
+    fun removeSong(song: SongEntity){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                songDao.removeSong(song)
+            }
+        }
+    }
+
     fun getAllSongs(): LiveData<List<SongEntity>> =
         songDao.getAll()
 
