@@ -3,16 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <!--android:icon="@drawable/ic_menu_camera" -->
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_played_song"
             android:title="@string/played_song"
-
             android:visible="false"/>
         <item
             android:id="@+id/nav_song_chooser"
             android:title="@string/song_chooser" />
+
+        <item
+            android:id="@+id/nav_add_song"
+            android:title="@string/add_song" />
     </group>
 
 </menu>

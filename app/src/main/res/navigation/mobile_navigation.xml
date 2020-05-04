@@ -13,7 +13,11 @@
         <action
             android:id="@+id/action_nav_song_chooser_to_nav_played_song"
             app:destination="@id/nav_played_song" />
+        <action
+            android:id="@+id/action_nav_song_chooser_to_nav_add_song2"
+            app:destination="@id/nav_add_song" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_played_song"
         android:name="com.example.student.myapplication.PlayedSongFragment"
@@ -37,6 +41,15 @@
         <argument
             android:name="tacts"
             app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_add_song"
+        android:name="com.example.student.myapplication.AddSongFragment"
+        android:label="@string/add_song" >
+        <action
+            android:id="@+id/action_nav_add_song_to_nav_played_song"
+            app:destination="@id/nav_played_song" />
     </fragment>
 
 </navigation>

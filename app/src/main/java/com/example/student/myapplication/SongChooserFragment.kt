@@ -58,10 +58,10 @@ var dataAdded = false
         }*/
         val navigationView = activity!!.findViewById<NavigationView>(R.id.nav_view)
         val playSongItem = navigationView.menu.findItem(R.id.nav_played_song)
-        playSongItem.isEnabled = true
+        //playSongItem.isEnabled = true
 
         gridView.setOnItemClickListener { _, view, position, _ ->
-            playSongItem.isEnabled = true
+            //playSongItem.isEnabled = true
             playSongItem.isVisible = true
 
             val song = adapter!!.getItem(position) as SongEntity

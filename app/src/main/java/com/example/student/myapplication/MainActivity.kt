@@ -31,7 +31,8 @@ class MainActivity : AppCompatActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_song_chooser, R.id.nav_played_song
+                //Top level elements
+                R.id.nav_song_chooser, R.id.nav_played_song, R.id.nav_add_song
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

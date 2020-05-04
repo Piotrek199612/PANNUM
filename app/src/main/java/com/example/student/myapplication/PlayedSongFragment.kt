@@ -3,17 +3,13 @@ package com.example.student.myapplication
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.GestureDetectorCompat
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.played_song_fragment.*
 
 class PlayedSongFragment : Fragment() {
 
@@ -157,6 +153,9 @@ class PlayedSongFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        val navigationView = activity!!.findViewById<NavigationView>(R.id.nav_view)
+        val playSongItem = navigationView.menu.findItem(R.id.nav_played_song)
+        playSongItem.isEnabled = true
         //val myView = view!!.findViewById<NotesView>(R.id.myView)
         //markPoint = myView.getMarkPosition()
     }
