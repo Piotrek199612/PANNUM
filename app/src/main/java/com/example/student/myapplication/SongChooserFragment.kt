@@ -1,6 +1,7 @@
 package com.example.student.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -75,6 +76,10 @@ var dataAdded = false
                 "coverResourceName" to song.coverResourceName
             )
             findNavController().navigate(R.id.nav_played_song, args)
+        }
+
+        gridView.setOnItemLongClickListener{ _, view, position, _ ->
+            Log.w("Sturmer", "Item pressed");true
         }
 
         return view

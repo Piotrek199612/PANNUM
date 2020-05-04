@@ -31,6 +31,14 @@ class MySongsViewModel: ViewModel() {
         }
     }
 
+    fun addSong(song: SongEntity){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                songDao.insert(listOf(song))
+            }
+        }
+    }
+
     fun getAllSongs(): LiveData<List<SongEntity>> =
         songDao.getAll()
 

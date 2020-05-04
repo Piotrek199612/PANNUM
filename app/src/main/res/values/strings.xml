@@ -10,4 +10,6 @@
     <string name="played_song">Song Played</string>
     <string name="song_chooser">Choose Song</string>
     <string name="add_song">Add song</string>
+
+    <string name="not_chosen">Not chosen</string>
 </resources>
