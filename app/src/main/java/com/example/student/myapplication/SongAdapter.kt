@@ -9,6 +9,10 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.navigation.NavigationView
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.os.Build
+
 
 class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.my_song_row) {
 
@@ -32,10 +36,16 @@ class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.
         playedTv.text = song.played.toString()
 
         val coverView = view!!.findViewById<ImageView>(R.id.coverView)
-        context.resources.getIdentifier(song.coverResourceName, "drawable", context.packageName)
-
         val coverId = context.resources.getIdentifier(song.coverResourceName, "drawable", context.packageName)
-        coverView.setImageResource(coverId)
+
+        if (coverId != 0)
+            coverView.setImageResource(coverId)
+        else {
+                val appData = context.packageManager.getPackageInfo(context.packageName, 0).applicationInfo.dataDir.toString()
+                val filename = appData +"/files/"+ song.coverResourceName
+                val myBitmap = BitmapFactory.decodeFile(filename)
+                coverView.setImageBitmap(myBitmap)
+        }
 
         return view
     }

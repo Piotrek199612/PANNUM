@@ -106,10 +106,9 @@ class AddSongFragment : Fragment() {
     }
 
     private fun copyFile(fileUri:Uri, newFileName:String){
-        val filename = getFileName(fileUri)
         val file = context?.contentResolver?.openFileDescriptor(fileUri, "r")
         val fileMusic = FileInputStream(file?.fileDescriptor)
-        val outFile = File(context?.filesDir, newFileName + "." + filename.split('.')[1])
+        val outFile = File(context?.filesDir, newFileName)
         fileMusic.copyTo(outFile.outputStream())
     }
 
@@ -167,7 +166,7 @@ class AddSongFragment : Fragment() {
         val title = doc.getElementsByTagName("title").item(0).firstChild.nodeValue
         val artist = doc.getElementsByTagName("artistName").item(0).firstChild.nodeValue
         val year = doc.getElementsByTagName("albumYear").item(0).firstChild.nodeValue.toInt()
-        val songResourceName = title.replace(" ", "").toLowerCase()
+        val songResourceName = title.replace("'", "").replace(" ", "").toLowerCase()
         val album = doc.getElementsByTagName("albumName").item(0).firstChild.nodeValue
         val coverResourceName = album.replace(" ", "").toLowerCase()
 

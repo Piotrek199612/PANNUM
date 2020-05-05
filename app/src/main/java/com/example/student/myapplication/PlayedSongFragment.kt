@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
+import java.io.FileInputStream
 
 class PlayedSongFragment : Fragment() {
 
@@ -75,7 +76,15 @@ class PlayedSongFragment : Fragment() {
 
 
         val songId = resources.getIdentifier(songResourceName, "raw", context?.packageName)
-        mMediaPlayer = MediaPlayer.create(context, songId)
+        if (songId != 0)
+            mMediaPlayer = MediaPlayer.create(context, songId)
+        else{
+                mMediaPlayer = MediaPlayer()
+                val appData = context?.packageManager?.getPackageInfo(context!!.packageName, 0)?.applicationInfo?.dataDir.toString()
+                val fos = FileInputStream("$appData/files/$songResourceName")
+                mMediaPlayer.setDataSource(fos.fd)
+                mMediaPlayer.prepare()
+        }
 
         myView.setLength(mMediaPlayer.duration)
 
