@@ -11,7 +11,7 @@ import android.widget.HorizontalScrollView
 class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private var markPosition = 0
-    private val space = 0.5f//250
+    val space = 0.6f
 
     private val paint = Paint()
     private val linePaint = Paint()
@@ -52,7 +52,6 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        setMarkPosition(markPosition)
         drawBackground(canvas)
     }
 
@@ -100,7 +99,7 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             canvas.drawLine((it * space + start) - 40, 0f ,(it * space + start) - 40, height.toFloat(), tactPaint)
         }
 
-        canvas.drawLine((markPosition + start).toFloat() + 30, 0f ,( markPosition + start).toFloat()+ 30, height.toFloat(), markPaint)
+        canvas.drawLine((markPosition + start).toFloat() + 30, 0f ,(markPosition + start).toFloat()+ 30, height.toFloat(), markPaint)
     }
 
     private fun drawNotes(canvas: Canvas, marginTop:Int, spaceBetween: Float) {
@@ -117,7 +116,6 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val height = 500
         val displayMetrics = context.resources.displayMetrics
         setMeasuredDimension((start + totalLength + (displayMetrics.widthPixels - start)), height)
-        setMarkPosition(markPosition)
     }
 
 

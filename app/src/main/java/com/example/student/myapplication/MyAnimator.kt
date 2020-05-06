@@ -31,9 +31,9 @@ class MyAnimator(animationTarget: NotesView, private val endValue :Int, private 
     }
 
     fun setAnimationTime(newValue: Long){
-            val newTime = (newValue*1.0f/endValue) * totalMillis
-            animation.cancel()
-            animation.currentPlayTime = newTime.toLong()
+        val newTime = (newValue*1.0f/endValue) * totalMillis
+        animation.cancel()
+        animation.currentPlayTime = newTime.toLong()
     }
 
     fun getCurrentTime(): Long {

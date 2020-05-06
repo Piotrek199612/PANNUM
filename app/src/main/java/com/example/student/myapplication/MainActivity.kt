@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val playSongItem = navigationView.menu.findItem(R.id.nav_played_song)
+        playSongItem.isVisible =  (application as MyApplication).songPlayed
     }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)

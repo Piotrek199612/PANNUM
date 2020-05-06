@@ -19,7 +19,7 @@ class MySongsViewModel: ViewModel() {
     
     fun addDefaultData(assets: AssetManager) {
         val defaultData = mutableListOf<SongEntity>()
-        val files = arrayOf("starlight.xml", "sevennationarmy.xml", "tripswitch.xml")
+        val files = arrayOf("sevennationarmy.xml", "tripswitch.xml")
         for (i in files.indices) {
             defaultData.add(parseSongXML(i, files[i], assets))
         }
