@@ -119,12 +119,16 @@ class PlayedSongFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        mMediaPlayer.stop()
+        mMediaPlayer.pause()
         mMyAnimator.pauseAnimation()
+        state = 0
+
+        val playPauseButton = view!!.findViewById<ImageButton>(R.id.playPauseButton)
+        playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+        
         val myView = view?.findViewById<NotesView>(R.id.myView)
         (context?.applicationContext as MyApplication).markPoint =  myView?.getMarkPosition()!!
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
