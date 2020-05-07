@@ -19,7 +19,7 @@
         tools:layout_editor_absoluteX="-16dp">
 
         <com.example.student.myapplication.NotesView
-            android:id="@+id/myView"
+            android:id="@+id/notesView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:markPosition="0" />
@@ -29,7 +29,6 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textColor="@android:color/black"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horizontalScroll"
@@ -42,7 +41,6 @@
         android:id="@+id/artistText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textColor="@android:color/darker_gray"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/horizontalScroll"

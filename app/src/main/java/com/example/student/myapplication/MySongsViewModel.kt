@@ -51,7 +51,6 @@ class MySongsViewModel: ViewModel() {
         songDao.getAll()
 
     fun deteleAllSongs() {
-//        TODO: utwórz korytunę usuwającą dane
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 songDao.removeAll()
@@ -59,9 +58,7 @@ class MySongsViewModel: ViewModel() {
         }
     }
 
-
-
-    fun parseSongXML(id:Int, filePath:String, assets: AssetManager) :SongEntity{
+    private fun parseSongXML(id:Int, filePath:String, assets: AssetManager) :SongEntity{
         val istream = assets.open(filePath)
         val builderFactory = DocumentBuilderFactory.newInstance()
         val docBuilder = builderFactory.newDocumentBuilder()

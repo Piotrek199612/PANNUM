@@ -6,15 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_played_song"
-            android:title="@string/played_song"
+            android:title="@string/played_song_menu_item"
             android:visible="false"/>
         <item
             android:id="@+id/nav_song_chooser"
-            android:title="@string/song_chooser" />
+            android:title="@string/song_chooser_menu_item" />
 
         <item
             android:id="@+id/nav_add_song"
-            android:title="@string/add_song" />
+            android:title="@string/add_song_menu_item" />
     </group>
 
 </menu>

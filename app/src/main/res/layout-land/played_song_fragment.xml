@@ -20,7 +20,7 @@
         tools:layout_editor_absoluteX="-16dp">
 
         <com.example.student.myapplication.NotesView
-            android:id="@+id/myView"
+            android:id="@+id/notesView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:markPosition="0" />

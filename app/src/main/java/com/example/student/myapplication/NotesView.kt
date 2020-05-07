@@ -5,8 +5,12 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.widget.HorizontalScrollView
+import androidx.core.view.GestureDetectorCompat
+import kotlinx.android.synthetic.main.played_song_fragment.*
 
 class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
@@ -20,8 +24,10 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val textPaint = Paint()
     private val tactNumberPaint = Paint()
 
-    private lateinit var notes: Array<List<Int>>
+    private lateinit var notes: ArrayList<List<Int>>
     private lateinit var tacts: Array<Int>
+
+    var clickAction: (event: MotionEvent) -> Unit = {}
 
     var totalLength = 0
 
@@ -33,6 +39,19 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         markPosition = typedArray.getInt(R.styleable.NotesView_markPosition, 0)
         typedArray.recycle()
         initPaints()
+        isClickable = true
+
+        class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapUp(event: MotionEvent): Boolean {
+                clickAction(event)
+                return true
+            }
+        }
+
+        val mDetector = GestureDetectorCompat(context, MyGestureListener())
+        setOnTouchListener { _, event ->
+            mDetector.onTouchEvent(event)
+        }
     }
 
     fun setMarkPosition(value:Int)
@@ -53,33 +72,6 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawBackground(canvas)
-    }
-
-    private fun initPaints()
-    {
-        paint.color = Color.MAGENTA
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 10f
-
-        linePaint.color = Color.GRAY
-        linePaint.alpha = 85
-        linePaint.strokeWidth = 7f
-
-        markPaint.color = Color.GREEN
-        markPaint.alpha = 50
-        markPaint.strokeWidth = 90f
-
-        tactPaint.color = Color.GRAY
-        tactPaint.alpha = 70
-        tactPaint.strokeWidth = 7f
-
-        tactNumberPaint.color = Color.DKGRAY
-        tactNumberPaint.style = Paint.Style.FILL
-        tactNumberPaint.textSize = 40f
-
-        textPaint.color = Color.BLACK
-        textPaint.style = Paint.Style.FILL
-        textPaint.textSize = 60f
     }
 
     private fun drawBackground(canvas: Canvas) {
@@ -119,7 +111,7 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
 
-    fun setNotes(notes: Array<List<Int>>){
+    fun setNotes(notes: ArrayList<List<Int>>){
         this.notes = notes
     }
 
@@ -130,4 +122,32 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     fun setLength(millis: Int){
         totalLength = (millis*space).toInt()
     }
+
+    private fun initPaints()
+    {
+        paint.color = Color.MAGENTA
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 10f
+
+        linePaint.color = Color.GRAY
+        linePaint.alpha = 85
+        linePaint.strokeWidth = 7f
+
+        markPaint.color = Color.GREEN
+        markPaint.alpha = 50
+        markPaint.strokeWidth = 90f
+
+        tactPaint.color = Color.GRAY
+        tactPaint.alpha = 70
+        tactPaint.strokeWidth = 7f
+
+        tactNumberPaint.color = Color.DKGRAY
+        tactNumberPaint.style = Paint.Style.FILL
+        tactNumberPaint.textSize = 40f
+
+        textPaint.color = Color.BLACK
+        textPaint.style = Paint.Style.FILL
+        textPaint.textSize = 60f
+    }
+
 }

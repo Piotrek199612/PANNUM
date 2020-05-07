@@ -1,15 +1,29 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="drawer_open">open</string>
-    <string name="drawer_close">close</string>
 
+    <!-- Navigation menu -->
     <string name="nav_header_title">Bass master</string>
     <string name="nav_header_subtitle">piotr.sturmer@gmail.com</string>
     <string name="nav_header_desc">Description</string>
 
-    <string name="played_song">Song Played</string>
-    <string name="song_chooser">Choose Song</string>
-    <string name="add_song">Add song</string>
+    <string name="played_song_menu_item">Song Played</string>
+    <string name="song_chooser_menu_item">Choose Song</string>
+    <string name="add_song_menu_item">Add song</string>
 
+
+    <!-- Play song fragment -->
+
+    <!-- Choose song fragment -->
+    <string name="song_removed_toast">Song successfully removed"</string>
+    <string name="remove_song_context_menu_item">Remove</string>
+
+    <!-- Add song fragment -->
+    <string name="choose_file_intent">Choose file</string>
+    <string name="song_add_success">Song successfully added</string>
+    <string name="load_button_text">Load</string>
+    <string name="cover_button_text">Cover</string>
+    <string name="xml_button_text">XML</string>
+    <string name="music_button_text">Music</string>
     <string name="not_chosen">Not chosen</string>
+
 </resources>
