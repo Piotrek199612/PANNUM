@@ -81,7 +81,7 @@ class SongChooserFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val info = item.menuInfo as AdapterContextMenuInfo
         val song = songsGridView.adapter.getItem(info.id.toInt()) as SongEntity
-        viewModel.removeSong(song)
+        viewModel.removeSong(song, context?.filesDir!!.absolutePath)
         val toast = Toast.makeText(context, getString(R.string.song_removed_toast), Toast.LENGTH_SHORT)
         toast.show()
         return true

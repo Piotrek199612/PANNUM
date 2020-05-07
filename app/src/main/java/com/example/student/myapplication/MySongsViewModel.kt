@@ -12,6 +12,7 @@ import java.lang.StringBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
+import java.io.File
 
 class MySongsViewModel: ViewModel() {
 
@@ -39,9 +40,17 @@ class MySongsViewModel: ViewModel() {
         }
     }
 
-    fun removeSong(song: SongEntity){
+    fun removeSong(song: SongEntity, appDataPath: String){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
+                if (songDao.canRemoveCover(song.coverResourceName) == 1) {
+                    val coverFile = File(appDataPath + "/" + song.coverResourceName)
+                    coverFile.delete()
+                }
+                if (songDao.canRemoveSong(song.songResourceName) == 1) {
+                    val songFile = File(appDataPath + "/" + song.songResourceName)
+                    songFile.delete()
+                }
                 songDao.removeSong(song)
             }
         }

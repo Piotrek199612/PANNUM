@@ -19,4 +19,10 @@ interface SongDao {
 
     @Delete
     fun removeSong(song: SongEntity)
+
+    @Query("SELECT COUNT(*) FROM songentity WHERE coverResourceName == :coverResourceName")
+    fun canRemoveCover(coverResourceName: String) : Int
+
+    @Query("SELECT COUNT(*) FROM songentity WHERE songResourceName == :songResourceName")
+    fun canRemoveSong(songResourceName: String) : Int
 }
