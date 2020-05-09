@@ -2,6 +2,9 @@
 <resources>
     <declare-styleable name="NotesView">
         <attr name="markPosition" format="integer"/>
+
+        <attr name="borderColor" format="color"/>
+        <attr name="borderThickness" format="float"/>
     </declare-styleable>
 
 </resources>

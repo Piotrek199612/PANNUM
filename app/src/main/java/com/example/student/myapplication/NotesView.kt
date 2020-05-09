@@ -10,11 +10,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.HorizontalScrollView
 import androidx.core.view.GestureDetectorCompat
-import kotlinx.android.synthetic.main.played_song_fragment.*
 
 class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private var markPosition = 0
+    private var borderColor = Color.BLACK
+    private var borderThickness = 0f
+
     val space = 0.6f
 
     private val paint = Paint()
@@ -37,6 +39,8 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.NotesView,
             0, 0)
         markPosition = typedArray.getInt(R.styleable.NotesView_markPosition, 0)
+        borderColor = typedArray.getInt(R.styleable.NotesView_borderColor, Color.BLACK)
+        borderThickness = typedArray.getFloat(R.styleable.NotesView_borderThickness, 0f)
         typedArray.recycle()
         initPaints()
         isClickable = true
@@ -69,6 +73,12 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         return markPosition
     }
 
+    fun setBorderColor(value:Int) { borderColor = value }
+    fun getBorderColor(): Int { return borderColor }
+
+    fun setBorderThickness(value:Float) { borderThickness = value }
+    fun getBorderThickness(): Float { return borderThickness }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawBackground(canvas)
@@ -77,14 +87,13 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private fun drawBackground(canvas: Canvas) {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
-        val topBottomMargin = 50
-        val spaceBetweenLines = (height - 2*topBottomMargin) / 3.0f
+        val spaceBetweenLines = (height - (paddingTop + paddingBottom)) / 3.0f
 
         for (i in 0..3){
-            canvas.drawLine(0f, topBottomMargin + i*spaceBetweenLines, width.toFloat(), topBottomMargin + i*spaceBetweenLines, linePaint)
+            canvas.drawLine(0f, paddingTop + i*spaceBetweenLines, width.toFloat(), paddingTop + i*spaceBetweenLines, linePaint)
         }
 
-        drawNotes(canvas, topBottomMargin+ 20, spaceBetweenLines )
+        drawNotes(canvas, paddingTop+ 20, spaceBetweenLines )
 
 
         tacts.forEach {
@@ -105,9 +114,8 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val height = 500
         val displayMetrics = context.resources.displayMetrics
-        setMeasuredDimension((start + totalLength + (displayMetrics.widthPixels - start)), height)
+        setMeasuredDimension((start + totalLength + (displayMetrics.widthPixels - start)), layoutParams.height)
     }
 
 
@@ -125,9 +133,9 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private fun initPaints()
     {
-        paint.color = Color.MAGENTA
+        paint.color = borderColor
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 10f
+        paint.strokeWidth = borderThickness
 
         linePaint.color = Color.GRAY
         linePaint.alpha = 85
