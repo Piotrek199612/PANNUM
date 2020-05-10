@@ -12,6 +12,10 @@ class MySongsViewModel: ViewModel() {
 
     private val songDao by lazy { MyApplication.appDatabase.songDao() }
 
+    var currentSong: SongEntity? = null
+    var markPoint: Int = 0
+    var songPlayed = false
+
     fun addSong(song: SongEntity){
         viewModelScope.launch {
             withContext(Dispatchers.IO){

@@ -15,7 +15,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.song_chooser_fragment.*
 
 class SongChooserFragment : Fragment() {
-    private val viewModel by lazy { ViewModelProviders.of(this).get(MySongsViewModel::class.java)}
+    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(MySongsViewModel::class.java)}
     private lateinit var application :MyApplication
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -25,7 +25,6 @@ class SongChooserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        application = context?.applicationContext as MyApplication
 
         val adapter = context?.let { SongAdapter(it) }
         songsGridView.adapter = adapter
@@ -40,11 +39,11 @@ class SongChooserFragment : Fragment() {
         val playSongItem = navigationView.menu.findItem(R.id.nav_played_song)
 
         songsGridView.setOnItemClickListener { _, _, position, _ ->
-            application.songPlayed = true
-            playSongItem.isVisible =  application.songPlayed
+            viewModel.songPlayed = true
+            playSongItem.isVisible =  viewModel.songPlayed
 
             val song = adapter!!.getItem(position) as SongEntity
-            application.currentSong = song
+            viewModel.currentSong = song
 
             val args = bundleOf(
                 "artist" to song.artist,
@@ -54,7 +53,8 @@ class SongChooserFragment : Fragment() {
                 "songResourceName" to song.songResourceName,
                 "coverResourceName" to song.coverResourceName
             )
-            application.markPoint = 0
+            viewModel.markPoint = 0
+            viewModel.currentSong = song
             findNavController().navigate(R.id.nav_played_song, args)
         }
     }
@@ -68,7 +68,7 @@ class SongChooserFragment : Fragment() {
         val info = item.menuInfo as AdapterContextMenuInfo
         val song = songsGridView.adapter.getItem(info.id.toInt()) as SongEntity
         var toastText =getString(R.string.cannot_remove_song_toast)
-        if (application.currentSong != song){
+        if (viewModel.currentSong != song){
             viewModel.removeSong(song, context?.filesDir!!.absolutePath)
             toastText = getString(R.string.song_removed_toast)
         }

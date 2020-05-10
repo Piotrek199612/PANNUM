@@ -15,8 +15,4 @@ class MyApplication : Application() {
     companion object {
         lateinit var appDatabase: AppDatabase
     }
-
-    var songPlayed = false
-    var currentSong:SongEntity? = null
-    var markPoint = 0
 }

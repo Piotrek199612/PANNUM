@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.played_song_fragment.*
 import java.io.FileInputStream
@@ -14,7 +15,8 @@ class PlayedSongFragment : Fragment() {
     private lateinit var mMediaPlayer: MediaPlayer
     private lateinit var mMyAnimator: MyAnimator
     private var state = 0
-    private lateinit var application: MyApplication
+
+    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(MySongsViewModel::class.java)}
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -25,9 +27,9 @@ class PlayedSongFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        application = (context?.applicationContext as MyApplication)
-        val markPoint = application.markPoint
-        currentSong = application.currentSong!!
+
+        val markPoint = viewModel.markPoint
+        currentSong = viewModel.currentSong!!
 
         //Enable play song menu item
         val navigationView = activity!!.findViewById<NavigationView>(R.id.nav_view)
@@ -96,7 +98,7 @@ class PlayedSongFragment : Fragment() {
 
         playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
 
-        application.markPoint =  notesView?.getMarkPosition()!!
+        viewModel.markPoint =  notesView?.getMarkPosition()!!
     }
 
     override fun onDestroyView() {
