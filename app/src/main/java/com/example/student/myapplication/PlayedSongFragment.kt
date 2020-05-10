@@ -27,7 +27,7 @@ class PlayedSongFragment : Fragment() {
 
         application = (context?.applicationContext as MyApplication)
         val markPoint = application.markPoint
-        currentSong = application.currentSong
+        currentSong = application.currentSong!!
 
         //Enable play song menu item
         val navigationView = activity!!.findViewById<NavigationView>(R.id.nav_view)

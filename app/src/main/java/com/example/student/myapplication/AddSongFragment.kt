@@ -172,7 +172,7 @@ class AddSongFragment : Fragment() {
         val coverResourceName = album.replace(" ", "").toLowerCase()
 
         val xpath = XPathFactory.newInstance().newXPath()
-        val expr = xpath.compile("//level[not(@difficulty < //level/@difficulty)]/notes/*")
+        val expr = xpath.compile("//notes[not(@count < //notes/@count)]/*")
         val notes = expr.evaluate(doc, XPathConstants.NODESET) as NodeList
 
         val notesString = StringBuilder()

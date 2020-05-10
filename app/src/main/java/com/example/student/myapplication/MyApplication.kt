@@ -17,6 +17,6 @@ class MyApplication : Application() {
     }
 
     var songPlayed = false
-    lateinit var currentSong:SongEntity
+    var currentSong:SongEntity? = null
     var markPoint = 0
 }
