@@ -14,13 +14,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.Toast
 import kotlinx.android.synthetic.main.song_chooser_fragment.*
 
-
-
 class SongChooserFragment : Fragment() {
     private val viewModel by lazy { ViewModelProviders.of(this).get(MySongsViewModel::class.java)}
     private lateinit var application :MyApplication
-
-    private var dataAdded = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,16 +35,6 @@ class SongChooserFragment : Fragment() {
             adapter!!.clear()
             adapter.addAll(it)
         })
-
-        chooserButton.setOnClickListener{
-            dataAdded = if (dataAdded) {
-                viewModel.addDefaultData(context!!.assets)
-                false
-            } else{
-                viewModel.deteleAllSongs()
-                true
-            }
-        }
 
         val navigationView = activity!!.findViewById<NavigationView>(R.id.nav_view)
         val playSongItem = navigationView.menu.findItem(R.id.nav_played_song)
@@ -81,8 +67,12 @@ class SongChooserFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val info = item.menuInfo as AdapterContextMenuInfo
         val song = songsGridView.adapter.getItem(info.id.toInt()) as SongEntity
-        viewModel.removeSong(song, context?.filesDir!!.absolutePath)
-        val toast = Toast.makeText(context, getString(R.string.song_removed_toast), Toast.LENGTH_SHORT)
+        var toastText =getString(R.string.cannot_remove_song_toast)
+        if (application.currentSong != song){
+            viewModel.removeSong(song, context?.filesDir!!.absolutePath)
+            toastText = getString(R.string.song_removed_toast)
+        }
+        val toast = Toast.makeText(context, toastText, Toast.LENGTH_SHORT)
         toast.show()
         return true
     }

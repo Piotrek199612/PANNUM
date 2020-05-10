@@ -107,18 +107,12 @@ class PlayedSongFragment : Fragment() {
     }
 
     private fun createMediaPlayer():MediaPlayer{
-        val songId = resources.getIdentifier(currentSong.songResourceName, "raw", context?.packageName)
-        var mediaPlayer:MediaPlayer? = null
-        if (songId != 0)
-            mediaPlayer = MediaPlayer.create(context, songId)
-        else{
-            val appData = context?.packageManager?.getPackageInfo(context!!.packageName, 0)?.applicationInfo?.dataDir.toString()
-            val fos = FileInputStream("$appData/files/" + currentSong.songResourceName)
-            mediaPlayer = MediaPlayer()
+        val mediaPlayer = MediaPlayer()
+        val appData = context?.packageManager?.getPackageInfo(context!!.packageName, 0)?.applicationInfo?.dataDir.toString()
+        val fos = FileInputStream("$appData/files/" + currentSong.songResourceName)
 
-            mediaPlayer.setDataSource(fos.fd)
-            mediaPlayer.prepare()
-        }
-        return mediaPlayer!!
+        mediaPlayer.setDataSource(fos.fd)
+        mediaPlayer.prepare()
+        return mediaPlayer
     }
 }

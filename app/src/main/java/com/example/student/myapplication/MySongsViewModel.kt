@@ -17,20 +17,6 @@ import java.io.File
 class MySongsViewModel: ViewModel() {
 
     private val songDao by lazy { MyApplication.appDatabase.songDao() }
-    
-    fun addDefaultData(assets: AssetManager) {
-        val defaultData = mutableListOf<SongEntity>()
-        val files = arrayOf("sevennationarmy.xml", "tripswitch.xml")
-        for (i in files.indices) {
-            defaultData.add(parseSongXML(i, files[i], assets))
-        }
-
-        viewModelScope.launch {
-            withContext(Dispatchers.IO){
-                songDao.insert(defaultData)
-            }
-        }
-    }
 
     fun addSong(song: SongEntity){
         viewModelScope.launch {
@@ -59,14 +45,6 @@ class MySongsViewModel: ViewModel() {
     fun getAllSongs(): LiveData<List<SongEntity>> =
         songDao.getAll()
 
-    fun deteleAllSongs() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                songDao.removeAll()
-            }
-        }
-    }
-
     private fun parseSongXML(id:Int, filePath:String, assets: AssetManager) :SongEntity{
         val istream = assets.open(filePath)
         val builderFactory = DocumentBuilderFactory.newInstance()
@@ -82,7 +60,7 @@ class MySongsViewModel: ViewModel() {
         val coverResourceName = album.replace(" ", "").toLowerCase()
 
         val xpath = XPathFactory.newInstance().newXPath()
-        val expr = xpath.compile("//level[not(@difficulty < //level/@difficulty)]/notes/*")
+        val expr = xpath.compile("//notes[not(@count < //notes/@count)]/*")
         val notes = expr.evaluate(doc, XPathConstants.NODESET) as NodeList
 
         val notesString = StringBuilder()

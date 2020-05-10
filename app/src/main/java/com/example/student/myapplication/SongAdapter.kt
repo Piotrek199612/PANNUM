@@ -35,17 +35,11 @@ class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.
         val playedTv = view.findViewById<TextView>(R.id.playedText)
         playedTv.text = song.played.toString()
 
-        val coverView = view!!.findViewById<ImageView>(R.id.coverView)
-        val coverId = context.resources.getIdentifier(song.coverResourceName, "drawable", context.packageName)
-
-        if (coverId != 0)
-            coverView.setImageResource(coverId)
-        else {
-                val appData = context.packageManager.getPackageInfo(context.packageName, 0).applicationInfo.dataDir.toString()
-                val filename = appData +"/files/"+ song.coverResourceName
-                val myBitmap = BitmapFactory.decodeFile(filename)
-                coverView.setImageBitmap(myBitmap)
-        }
+        val coverView = view.findViewById<ImageView>(R.id.coverView)
+        val appData = context.packageManager.getPackageInfo(context.packageName, 0).applicationInfo.dataDir.toString()
+        val filename = appData +"/files/"+ song.coverResourceName
+        val myBitmap = BitmapFactory.decodeFile(filename)
+        coverView.setImageBitmap(myBitmap)
 
         return view
     }

@@ -15,6 +15,7 @@
 
     <!-- Choose song fragment -->
     <string name="song_removed_toast">Song successfully removed"</string>
+    <string name="cannot_remove_song_toast">Currently played song cannot be removed"</string>
     <string name="remove_song_context_menu_item">Remove</string>
 
     <!-- Add song fragment -->
