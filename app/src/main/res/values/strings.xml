@@ -9,6 +9,7 @@
     <string name="played_song_menu_item">Song Played</string>
     <string name="song_chooser_menu_item">Choose Song</string>
     <string name="add_song_menu_item">Add song</string>
+    <string name="arcade_menu_item">Arcade mode</string>
 
 
     <!-- Play song fragment -->

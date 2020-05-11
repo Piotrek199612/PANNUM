@@ -41,6 +41,9 @@
         <argument
             android:name="tacts"
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_played_song_to_nav_arcade"
+            app:destination="@id/nav_arcade" />
     </fragment>
 
     <fragment
@@ -52,4 +55,9 @@
             app:destination="@id/nav_played_song" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_arcade"
+        android:name="com.example.student.myapplication.ArcadeFragment"
+        android:label="@string/arcade_menu_item" >
+    </fragment>
 </navigation>
