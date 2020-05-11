@@ -24,10 +24,13 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val markPaint = Paint()
     private val tactPaint = Paint()
     private val textPaint = Paint()
+    private val correctPaint = Paint()
+    private val wrongPaint = Paint()
     private val tactNumberPaint = Paint()
 
     private lateinit var notes: ArrayList<List<Int>>
     private lateinit var tacts: Array<Int>
+    private var backgrounds: Array<Boolean>? = null
 
     var clickAction: (event: MotionEvent) -> Unit = {}
 
@@ -36,8 +39,10 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     val start = 500//((parent as HorizontalScrollView).width *0.3 ).toInt()
 
     init {
-        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.NotesView,
-            0, 0)
+        val typedArray = context.theme.obtainStyledAttributes(
+            attrs, R.styleable.NotesView,
+            0, 0
+        )
         markPosition = typedArray.getInt(R.styleable.NotesView_markPosition, 0)
         borderColor = typedArray.getInt(R.styleable.NotesView_borderColor, Color.BLACK)
         borderThickness = typedArray.getFloat(R.styleable.NotesView_borderThickness, 0f)
@@ -58,8 +63,7 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         }
     }
 
-    fun setMarkPosition(value:Int)
-    {
+    fun setMarkPosition(value: Int) {
         val horizontalScroll = parent as HorizontalScrollView
         if (markPosition != value) {
             horizontalScroll.scrollX = value
@@ -69,15 +73,25 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         }
     }
 
-    fun getMarkPosition() : Int{
+    fun getMarkPosition(): Int {
         return markPosition
     }
 
-    fun setBorderColor(value:Int) { borderColor = value }
-    fun getBorderColor(): Int { return borderColor }
+    fun setBorderColor(value: Int) {
+        borderColor = value
+    }
 
-    fun setBorderThickness(value:Float) { borderThickness = value }
-    fun getBorderThickness(): Float { return borderThickness }
+    fun getBorderColor(): Int {
+        return borderColor
+    }
+
+    fun setBorderThickness(value: Float) {
+        borderThickness = value
+    }
+
+    fun getBorderThickness(): Float {
+        return borderThickness
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -89,37 +103,85 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
         val spaceBetweenLines = (height - (paddingTop + paddingBottom)) / 3.0f
 
-        for (i in 0..3){
-            canvas.drawLine(0f, paddingTop + i*spaceBetweenLines, width.toFloat(), paddingTop + i*spaceBetweenLines, linePaint)
+        for (i in 0..3) {
+            canvas.drawLine(
+                0f,
+                paddingTop + i * spaceBetweenLines,
+                width.toFloat(),
+                paddingTop + i * spaceBetweenLines,
+                linePaint
+            )
         }
 
-        drawNotes(canvas, paddingTop+ 20, spaceBetweenLines )
+        if (backgrounds != null) {
+            drawBackgrounds(canvas, paddingTop + 20, spaceBetweenLines)
+        }
 
+        drawNotes(canvas, paddingTop + 20, spaceBetweenLines)
 
         tacts.forEach {
-            canvas.drawLine((it * space + start) - 40, 0f ,(it * space + start) - 40, height.toFloat(), tactPaint)
+            canvas.drawLine(
+                (it * space + start) - 40,
+                0f,
+                (it * space + start) - 40,
+                height.toFloat(),
+                tactPaint
+            )
         }
 
-        canvas.drawLine((markPosition + start).toFloat() + 30, 0f ,(markPosition + start).toFloat()+ 30, height.toFloat(), markPaint)
+        canvas.drawLine(
+            (markPosition + start).toFloat() + 30,
+            0f,
+            (markPosition + start).toFloat() + 30,
+            height.toFloat(),
+            markPaint
+        )
     }
 
-    private fun drawNotes(canvas: Canvas, marginTop:Int, spaceBetween: Float) {
+    private fun drawNotes(canvas: Canvas, marginTop: Int, spaceBetween: Float) {
         notes.forEach { note ->
             val string = note[0]
             val fret = note[1]
             val time = note[2]
-            canvas.drawText(fret.toString(), (time * space + start), string*spaceBetween + marginTop, textPaint)
+            canvas.drawText(
+                fret.toString(),
+                (time * space + start),
+                string * spaceBetween + marginTop,
+                textPaint
+            )
+        }
+    }
+
+    private fun drawBackgrounds(canvas: Canvas, marginTop: Int, spaceBetween: Float) {
+        if (backgrounds != null) {
+            notes.forEachIndexed{ i, note ->
+                val string = note[0]
+                val time = note[2]
+                val distVertical = 80
+                val distHorizontal = 30
+                if (backgrounds!![i]) {
+                    canvas.drawRect(
+                        (time * space + start) - distHorizontal + 20,
+                        string * spaceBetween + marginTop - distVertical,
+                        (time * space + start) + distHorizontal + 20,
+                        string * spaceBetween + marginTop + distVertical,
+                        correctPaint)
+                }
+            }
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val displayMetrics = context.resources.displayMetrics
-        setMeasuredDimension((start + totalLength + (displayMetrics.widthPixels - start)), layoutParams.height)
+        setMeasuredDimension(
+            (start + totalLength + (displayMetrics.widthPixels - start)),
+            layoutParams.height
+        )
     }
 
 
-    fun setNotes(notes: ArrayList<List<Int>>){
+    fun setNotes(notes: ArrayList<List<Int>>) {
         this.notes = notes
     }
 
@@ -127,12 +189,15 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         this.tacts = tacts
     }
 
-    fun setLength(millis: Int){
-        totalLength = (millis*space).toInt()
+    fun setBackgrounds(backgrounds: Array<Boolean>) {
+        this.backgrounds = backgrounds
     }
 
-    private fun initPaints()
-    {
+    fun setLength(millis: Int) {
+        totalLength = (millis * space).toInt()
+    }
+
+    private fun initPaints() {
         paint.color = borderColor
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = borderThickness
@@ -156,6 +221,12 @@ class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         textPaint.color = Color.BLACK
         textPaint.style = Paint.Style.FILL
         textPaint.textSize = 60f
+
+        correctPaint.color = Color.GREEN
+        correctPaint.style = Paint.Style.FILL
+
+        wrongPaint.color = Color.RED
+        wrongPaint.style = Paint.Style.FILL
     }
 
 }

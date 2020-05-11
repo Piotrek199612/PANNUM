@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.view.*
 import com.google.android.material.navigation.NavigationView
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.ContextMenu
@@ -43,19 +42,9 @@ class SongChooserFragment : Fragment() {
             playSongItem.isVisible =  viewModel.songPlayed
 
             val song = adapter!!.getItem(position) as SongEntity
-            viewModel.currentSong = song
-
-            val args = bundleOf(
-                "artist" to song.artist,
-                "title" to song.title,
-                "notes" to song.notes,
-                "tacts" to song.tacts,
-                "songResourceName" to song.songResourceName,
-                "coverResourceName" to song.coverResourceName
-            )
             viewModel.markPoint = 0
             viewModel.currentSong = song
-            findNavController().navigate(R.id.nav_played_song, args)
+            findNavController().navigate(R.id.nav_played_song)
         }
     }
 

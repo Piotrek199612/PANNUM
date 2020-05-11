@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.played_song_fragment.*
 import java.io.FileInputStream
@@ -21,12 +22,12 @@ class PlayedSongFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.played_song_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         val markPoint = viewModel.markPoint
         currentSong = viewModel.currentSong!!
@@ -106,6 +107,21 @@ class PlayedSongFragment : Fragment() {
         val navigationView = activity!!.findViewById<NavigationView>(R.id.nav_view)
         val playSongItem = navigationView.menu.findItem(R.id.nav_played_song)
         playSongItem.isEnabled = true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.played_song_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.arcade_menu_item-> {
+                findNavController().navigate(R.id.nav_arcade)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun createMediaPlayer():MediaPlayer{
