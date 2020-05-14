@@ -1,5 +1,7 @@
 package com.example.student.myapplication
 
+import android.content.Context
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.arcade_fragment.*
 import java.io.FileInputStream
 
-class ArcadeFragment : Fragment() {
+class ArcadeFragment : Fragment(), AudioManager.OnAudioFocusChangeListener  {
 
     private lateinit var currentSong: SongEntity
     private lateinit var mMediaPlayer: MediaPlayer
@@ -83,10 +85,15 @@ class ArcadeFragment : Fragment() {
 
         playPauseButton.setOnClickListener {
             if (state == 0) {
-                playPauseButton.setImageResource(R.mipmap.ic_pause_foreground)
-                mMyAnimator.startAnimation()
-                state = 1
-                mMediaPlayer.start()
+                val audioManager = context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                val result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+                    playPauseButton.setImageResource(R.mipmap.ic_pause_foreground)
+                    mMyAnimator.startAnimation()
+                    state = 1
+                    mMediaPlayer.start()
+                }
             } else if (state == 1) {
                 playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
                 mMyAnimator.pauseAnimation()
@@ -140,6 +147,17 @@ class ArcadeFragment : Fragment() {
         playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
 
         viewModel.markPoint = notesView?.getMarkPosition()!!
+    }
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        when(focusChange){
+            AudioManager.AUDIOFOCUS_LOSS -> {
+                mMediaPlayer.pause()
+                mMyAnimator.pauseAnimation()
+                state = 0
+                playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+            }
+        }
     }
 
     private fun createMediaPlayer(): MediaPlayer {
