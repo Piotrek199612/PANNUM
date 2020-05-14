@@ -38,10 +38,10 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horizontalScroll"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.309"
+        app:layout_constraintHorizontal_bias="0.116"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.215" />
+        app:layout_constraintVertical_bias="0.149" />
 
     <TextView
         android:id="@+id/artistText"
@@ -51,10 +51,10 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/horizontalScroll"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.309"
+        app:layout_constraintHorizontal_bias="0.116"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="0.215" />
+        app:layout_constraintVertical_bias="0.254" />
 
     <ImageButton
         android:id="@+id/playPauseButton"
