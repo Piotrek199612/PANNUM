@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Simple Game</string>
+    <string name="bad_wins">Bad wins</string>
+    <string name="good_wins">Good wins</string>
 </resources>
