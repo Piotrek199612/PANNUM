@@ -1,20 +1,19 @@
-package com.example.student.myapplication
+package com.example.student.myapplication.database
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.google.android.material.navigation.NavigationView
 import android.graphics.BitmapFactory
-import android.graphics.Bitmap
-import android.os.Build
+import com.example.student.myapplication.R
 
 
-class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context, R.layout.my_song_row) {
+class SongAdapter(context: Context): ArrayAdapter<SongEntity>(context,
+    R.layout.my_song_row
+) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val song = getItem(position)

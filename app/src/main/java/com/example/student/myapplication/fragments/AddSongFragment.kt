@@ -1,4 +1,4 @@
-package com.example.student.myapplication
+package com.example.student.myapplication.fragments
 
 import android.Manifest
 import android.content.Intent
@@ -11,6 +11,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
+import com.example.student.myapplication.database.SongsViewModel
+import com.example.student.myapplication.R
+import com.example.student.myapplication.database.SongEntity
 import org.w3c.dom.NodeList
 import java.io.File
 import java.io.FileInputStream
@@ -38,7 +41,7 @@ class AddSongFragment : Fragment() {
     private var musicFileUri : Uri? = null
     private var coverFileUri : Uri? = null
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(MySongsViewModel::class.java)}
+    private val viewModel by lazy { ViewModelProviders.of(this).get(SongsViewModel::class.java)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +62,8 @@ class AddSongFragment : Fragment() {
         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity!!,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                MY_PERMISSIONS_READ_EXTERNAL_STORAGE)
+                MY_PERMISSIONS_READ_EXTERNAL_STORAGE
+            )
         }
 
         buttonXml.setOnClickListener { createGetContentIntent("text/xml", PICK_NOTES_RESULT_CODE) }
@@ -158,7 +162,7 @@ class AddSongFragment : Fragment() {
         return splittedPath!![splittedPath.size - 1]
     }
 
-    private fun parseSongXml(fileContent :InputStream) :SongEntity{
+    private fun parseSongXml(fileContent :InputStream) : SongEntity {
         val builderFactory = DocumentBuilderFactory.newInstance()
         val docBuilder = builderFactory.newDocumentBuilder()
         val doc = docBuilder.parse(fileContent)
@@ -199,13 +203,14 @@ class AddSongFragment : Fragment() {
         }
 
         return SongEntity(
-            artist=artist,
-            title=title,
-            year=year,
+            artist = artist,
+            title = title,
+            year = year,
             notes = notesString.toString(),
             tacts = tactsString.toString(),
             songResourceName = songResourceName,
-            coverResourceName = coverResourceName)
+            coverResourceName = coverResourceName
+        )
     }
 
 }

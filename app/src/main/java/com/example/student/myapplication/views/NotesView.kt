@@ -1,4 +1,4 @@
-package com.example.student.myapplication
+package com.example.student.myapplication.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.HorizontalScrollView
 import androidx.core.view.GestureDetectorCompat
+import com.example.student.myapplication.R
 
 class NotesView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 

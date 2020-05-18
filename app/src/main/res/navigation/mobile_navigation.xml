@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_song_chooser"
-        android:name="com.example.student.myapplication.SongChooserFragment"
+        android:name="com.example.student.myapplication.fragments.SongChooserFragment"
         android:label="@string/song_chooser_menu_item"
         tools:layout="@layout/song_chooser_fragment" >
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/nav_played_song"
-        android:name="com.example.student.myapplication.PlayedSongFragment"
+        android:name="com.example.student.myapplication.fragments.PlayedSongFragment"
         android:label="@string/played_song_menu_item"
         tools:layout="@layout/played_song_fragment" >
         <argument
@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/nav_add_song"
-        android:name="com.example.student.myapplication.AddSongFragment"
+        android:name="com.example.student.myapplication.fragments.AddSongFragment"
         android:label="@string/add_song_menu_item" >
         <action
             android:id="@+id/action_nav_add_song_to_nav_played_song"
@@ -57,7 +57,7 @@
 
     <fragment
         android:id="@+id/nav_arcade"
-        android:name="com.example.student.myapplication.ArcadeFragment"
+        android:name="com.example.student.myapplication.fragments.ArcadeFragment"
         android:label="@string/arcade_menu_item" >
     </fragment>
 </navigation>

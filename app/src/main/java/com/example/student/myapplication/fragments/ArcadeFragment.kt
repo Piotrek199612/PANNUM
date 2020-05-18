@@ -1,4 +1,4 @@
-package com.example.student.myapplication
+package com.example.student.myapplication.fragments
 
 import android.content.Context
 import android.media.AudioManager
@@ -9,6 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import com.example.student.myapplication.MyAnimator
+import com.example.student.myapplication.database.SongsViewModel
+import com.example.student.myapplication.R
+import com.example.student.myapplication.database.SongEntity
 import kotlinx.android.synthetic.main.arcade_fragment.*
 import java.io.FileInputStream
 
@@ -21,7 +25,7 @@ class ArcadeFragment : Fragment(), AudioManager.OnAudioFocusChangeListener  {
     private var lastNote = 0
 
     private val viewModel by lazy {
-        ViewModelProviders.of(activity!!).get(MySongsViewModel::class.java)
+        ViewModelProviders.of(activity!!).get(SongsViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -54,10 +58,14 @@ class ArcadeFragment : Fragment(), AudioManager.OnAudioFocusChangeListener  {
 
         mMediaPlayer = createMediaPlayer()
         notesView.setLength(mMediaPlayer.duration)
-        mMyAnimator = MyAnimator(notesView, notesView.totalLength, mMediaPlayer.duration.toLong(), {
-            playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
-            state = 0
-        })
+        mMyAnimator = MyAnimator(
+            notesView,
+            notesView.totalLength,
+            mMediaPlayer.duration.toLong(),
+            {
+                playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+                state = 0
+            })
 
         notesView.setMarkPosition(markPoint)
         mMyAnimator.setAnimationTime(markPoint.toLong())
@@ -150,12 +158,14 @@ class ArcadeFragment : Fragment(), AudioManager.OnAudioFocusChangeListener  {
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
-        when(focusChange){
-            AudioManager.AUDIOFOCUS_LOSS -> {
-                mMediaPlayer.pause()
-                mMyAnimator.pauseAnimation()
-                state = 0
-                playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+        if (mMediaPlayer.isPlaying) {
+            when (focusChange) {
+                AudioManager.AUDIOFOCUS_LOSS -> {
+                    mMediaPlayer.pause()
+                    mMyAnimator.pauseAnimation()
+                    state = 0
+                    playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+                }
             }
         }
     }

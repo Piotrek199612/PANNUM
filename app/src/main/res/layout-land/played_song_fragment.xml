@@ -19,7 +19,7 @@
         app:layout_constraintTop_toBottomOf="@+id/playPauseButton"
         app:layout_constraintVertical_bias="0.662">
 
-        <com.example.student.myapplication.NotesView
+        <com.example.student.myapplication.views.NotesView
             android:id="@+id/notesView"
             android:layout_width="wrap_content"
             android:layout_height="150dp"

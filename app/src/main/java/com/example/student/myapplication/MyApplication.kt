@@ -2,13 +2,13 @@ package com.example.student.myapplication
 
 import android.app.Application
 import androidx.room.Room
+import com.example.student.myapplication.database.AppDatabase
 
 class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
-//        TODO: odkomentuj kod tworzący bazę dane po wykonaniu TODO w klasie AppDatabase
         appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "songs.db").build()
     }
 

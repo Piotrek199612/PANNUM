@@ -1,4 +1,4 @@
-package com.example.student.myapplication
+package com.example.student.myapplication.fragments
 
 import android.content.Context
 import android.media.AudioManager
@@ -8,6 +8,10 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.example.student.myapplication.MyAnimator
+import com.example.student.myapplication.database.SongsViewModel
+import com.example.student.myapplication.R
+import com.example.student.myapplication.database.SongEntity
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.played_song_fragment.*
 import java.io.FileInputStream
@@ -19,7 +23,7 @@ class PlayedSongFragment : Fragment(), AudioManager.OnAudioFocusChangeListener {
     private lateinit var mMyAnimator: MyAnimator
     private var state = 0
 
-    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(MySongsViewModel::class.java)}
+    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(SongsViewModel::class.java)}
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -54,10 +58,14 @@ class PlayedSongFragment : Fragment(), AudioManager.OnAudioFocusChangeListener {
 
         mMediaPlayer = createMediaPlayer()
         notesView.setLength(mMediaPlayer.duration)
-        mMyAnimator = MyAnimator(notesView, notesView.totalLength, mMediaPlayer.duration.toLong(), {
-            playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
-            state = 0
-        })
+        mMyAnimator = MyAnimator(
+            notesView,
+            notesView.totalLength,
+            mMediaPlayer.duration.toLong(),
+            {
+                playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+                state = 0
+            })
 
         //Restore state
         notesView.setMarkPosition(markPoint)
@@ -123,7 +131,7 @@ class PlayedSongFragment : Fragment(), AudioManager.OnAudioFocusChangeListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.arcade_menu_item-> {
+            R.id.arcade_menu_item -> {
                 findNavController().navigate(R.id.nav_arcade)
                 true
             }
@@ -132,12 +140,14 @@ class PlayedSongFragment : Fragment(), AudioManager.OnAudioFocusChangeListener {
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
-        when(focusChange){
-            AudioManager.AUDIOFOCUS_LOSS -> {
-                mMediaPlayer.pause()
-                mMyAnimator.pauseAnimation()
-                state = 0
-                playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+        if (mMediaPlayer.isPlaying) {
+            when (focusChange) {
+                AudioManager.AUDIOFOCUS_LOSS -> {
+                    mMediaPlayer.pause()
+                    mMyAnimator.pauseAnimation()
+                    state = 0
+                    playPauseButton.setImageResource(R.mipmap.ic_play_foreground)
+                }
             }
         }
     }

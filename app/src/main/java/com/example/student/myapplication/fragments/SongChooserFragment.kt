@@ -1,4 +1,4 @@
-package com.example.student.myapplication
+package com.example.student.myapplication.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,11 +11,14 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.ContextMenu
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.Toast
+import com.example.student.myapplication.*
+import com.example.student.myapplication.database.SongAdapter
+import com.example.student.myapplication.database.SongEntity
+import com.example.student.myapplication.database.SongsViewModel
 import kotlinx.android.synthetic.main.song_chooser_fragment.*
 
 class SongChooserFragment : Fragment() {
-    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(MySongsViewModel::class.java)}
-    private lateinit var application :MyApplication
+    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(SongsViewModel::class.java)}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -25,12 +28,12 @@ class SongChooserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = context?.let { SongAdapter(it) }
+        val adapter = SongAdapter(context!!)
         songsGridView.adapter = adapter
         registerForContextMenu(songsGridView)
 
         viewModel.getAllSongs().observe(viewLifecycleOwner, Observer<List<SongEntity>> {
-            adapter!!.clear()
+            adapter.clear()
             adapter.addAll(it)
         })
 
@@ -41,7 +44,7 @@ class SongChooserFragment : Fragment() {
             viewModel.songPlayed = true
             playSongItem.isVisible =  viewModel.songPlayed
 
-            val song = adapter!!.getItem(position) as SongEntity
+            val song = adapter.getItem(position) as SongEntity
             viewModel.markPoint = 0
             viewModel.currentSong = song
             findNavController().navigate(R.id.nav_played_song)
@@ -56,7 +59,7 @@ class SongChooserFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val info = item.menuInfo as AdapterContextMenuInfo
         val song = songsGridView.adapter.getItem(info.id.toInt()) as SongEntity
-        var toastText =getString(R.string.cannot_remove_song_toast)
+        var toastText = getString(R.string.cannot_remove_song_toast)
         if (viewModel.currentSong != song){
             viewModel.removeSong(song, context?.filesDir!!.absolutePath)
             toastText = getString(R.string.song_removed_toast)

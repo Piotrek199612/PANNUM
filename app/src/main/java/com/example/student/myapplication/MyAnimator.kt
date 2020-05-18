@@ -3,8 +3,10 @@ package com.example.student.myapplication
 import android.animation.ObjectAnimator
 import android.view.animation.LinearInterpolator
 import androidx.core.animation.doOnEnd
+import com.example.student.myapplication.views.NotesView
 
-class MyAnimator(animationTarget: NotesView, private val endValue :Int, private val totalMillis:Long, doOnEnd: () -> Unit = {}, propertyName : String = "markPosition") {
+class MyAnimator(animationTarget: NotesView, private val endValue :Int, private val totalMillis:Long,
+                 doOnEnd: () -> Unit = {}, propertyName : String = "markPosition") {
 
     private var animation : ObjectAnimator =
         ObjectAnimator.ofInt(animationTarget, propertyName,  0, endValue)

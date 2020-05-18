@@ -11,13 +11,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.student.myapplication.database.SongsViewModel
 import com.google.android.material.navigation.NavigationView
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val viewModel by lazy { ViewModelProviders.of(this!!).get(MySongsViewModel::class.java)}
+    private val viewModel by lazy { ViewModelProviders.of(this!!).get(SongsViewModel::class.java)}
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {

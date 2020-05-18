@@ -1,14 +1,15 @@
-package com.example.student.myapplication
+package com.example.student.myapplication.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.student.myapplication.MyApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class MySongsViewModel: ViewModel() {
+class SongsViewModel: ViewModel() {
 
     private val songDao by lazy { MyApplication.appDatabase.songDao() }
 
