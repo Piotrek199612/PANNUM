@@ -11,6 +11,8 @@ import android.media.SoundPool
 import android.os.Build
 import pl.pp.simplegame.R
 import java.util.*
+import kotlin.random.nextInt
+
 
 
 
@@ -31,7 +33,12 @@ class GameState {
     private var badDeathID = 0
     private var goodDeathID = 0
     private var starID = 0
+    private var respawnID = 0
     private val soundVolume = 0.5f
+
+    private val respawn = hashMapOf<Sprite, Long>()
+    private val RESPAWN_MIN = 8000
+    private val RESPAWN_MAX = 20000
 
     fun initGame(resources: Resources, maxWidth: Int, maxHeight: Int) {
         endState = EndState.NO
@@ -44,11 +51,6 @@ class GameState {
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.bad5, false))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.bad6, false))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good1, true))
-        /*sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good2, true))
-        sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good3, true))
-        sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good4, true))
-        sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good5, true))
-        sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good6, true))*/
         starBmp = BitmapFactory.decodeResource(resources, R.drawable.star)
 
     }
@@ -70,6 +72,17 @@ class GameState {
         star?.update(maxWidth, maxHeight)
         if (star?.visible == false)
             star = null
+
+
+        val it = respawn.entries.iterator()
+        while (it.hasNext()) {
+            val entry = it.next()
+            if (entry.value < System.currentTimeMillis()) {
+                soundPool?.play(respawnID,soundVolume, soundVolume, 1, 0, 1f)
+                sprites.add(entry.key)
+                it.remove()
+            }
+        }
 
         calcEnd()
     }
@@ -106,6 +119,7 @@ class GameState {
         for (sprite in spritesToRemove) {
             sprites.remove(sprite)
             temps.add(TempSprite(sprite.x.toFloat(), sprite.y.toFloat()))
+            respawn[sprite] = System.currentTimeMillis() + kotlin.random.Random.nextInt(RESPAWN_MIN..RESPAWN_MAX)
         }
     }
 
@@ -177,6 +191,7 @@ class GameState {
         badDeathID = soundPool!!.load(context, R.raw.bad_death, 1)
         goodDeathID = soundPool!!.load(context, R.raw.good_death, 1)
         starID = soundPool!!.load(context, R.raw.star, 1)
+        respawnID = soundPool!!.load(context, R.raw.respawn, 1)
     }
 
 
