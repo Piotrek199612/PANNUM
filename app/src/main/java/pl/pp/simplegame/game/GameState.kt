@@ -2,8 +2,6 @@ package pl.pp.simplegame.game
 
 import android.content.res.Resources
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
 import pl.pp.simplegame.R
 import java.util.*
 
@@ -29,14 +27,16 @@ class GameState {
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.bad5, false))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.bad6, false))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good1, true))
-        sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good2, true))
+        /*sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good2, true))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good3, true))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good4, true))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good5, true))
-        sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good6, true))
+        sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good6, true))*/
     }
 
     fun update(maxWidth: Int, maxHeight: Int) {
+        detectCollision()
+
         if (isGameOver()) return
         for (sprite in sprites) {
             sprite.update(maxWidth, maxHeight)
@@ -48,6 +48,26 @@ class GameState {
                 temps.removeAt(i)
         }
         calcEnd()
+    }
+
+    private fun detectCollision(){
+        val spritesToRemove = mutableSetOf<Sprite>()
+        for (spriteA in sprites) {
+            if (spriteA.good) {
+                for (spriteB in sprites) {
+                    if (!spriteB.good) {
+                        if (spriteA.isCollision(spriteB)) {
+                            spritesToRemove.add(spriteA)
+                            spritesToRemove.add (spriteB)
+                        }
+                    }
+                }
+            }
+        }
+        for (sprite in spritesToRemove) {
+            sprites.remove(sprite)
+            temps.add(TempSprite(sprite.x.toFloat(), sprite.y.toFloat()))
+        }
     }
 
     private fun createSprite(
@@ -66,7 +86,16 @@ class GameState {
         return Sprite(bmp, good, x, y, xSpeed, ySpeed)
     }
 
-    fun killSprite(x: Float, y: Float) {
+    fun moveSprite(x: Float, y: Float, width: Int, height: Int) {
+        if (isGameOver()) return
+        for (i in sprites.lastIndex downTo 0) {
+            val sprite = sprites[i]
+            if (sprite.good) {
+                sprite.setSpeed(x, y, width.toFloat(), height.toFloat())
+                break
+            }
+        }
+
         if (isGameOver()) return
         for (i in sprites.lastIndex downTo 0) {
             val sprite = sprites[i]
@@ -80,10 +109,12 @@ class GameState {
 
     private fun calcEnd() {
         val leftGood = sprites.filter { it.good }.size
-        val leftBad = sprites . size - leftGood
-        if(leftGood == 0) {
+        val leftBad = sprites.size - leftGood
+        if (leftGood == 0) {
             endState = EndState.BAD_WINS
-        } else if (leftBad == 0) { endState = EndState.GOOD_WINS }
+        } else if (leftBad == 0) {
+            endState = EndState.GOOD_WINS
+        }
     }
 
     fun isGameOver(): Boolean {

@@ -24,6 +24,16 @@ class Sprite(val bmp: Bitmap, val good:Boolean, var x: Int, var y: Int, var xSpe
             xSpeed = -xSpeed
         }
         x += xSpeed
+
+        if (y + ySpeed >= maxHeight - height) {
+            y = maxHeight - height
+            ySpeed = -ySpeed
+        } else if (y + ySpeed <= 0) {
+            y = 0
+            ySpeed = -ySpeed
+        }
+        y += ySpeed
+
         currentFrame = ++currentFrame % BMP_COLUMNS
     }
 
@@ -35,5 +45,16 @@ class Sprite(val bmp: Bitmap, val good:Boolean, var x: Int, var y: Int, var xSpe
 
     fun isCollision(x2: Float, y2: Float): Boolean {
         return x2 > x && x2 < x + width && y2 > y && y2 < y + height
+    }
+
+    fun isCollision(sprite: Sprite): Boolean {
+        if (x + width < sprite.x ||sprite.x + sprite.width < x ||y + height < sprite.y ||sprite.y + sprite.height < y)
+            return false
+        return true
+    }
+
+    fun setSpeed(xDirection: Float, yDirection: Float, maxWidth: Float, maxHeight: Float) {
+        xSpeed = (((xDirection - x) / maxWidth) * MAX_SPEED * 3).roundToInt()
+        ySpeed = (((yDirection - y) / maxHeight) * MAX_SPEED * 3).roundToInt()
     }
 }

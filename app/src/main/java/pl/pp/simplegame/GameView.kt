@@ -8,7 +8,6 @@ import android.view.SurfaceView
 
 class GameView(context: Context) : SurfaceView(context) {
 
-    private var lastClick = 0L
     private var gameControllerCallback: GameControllerInterface? = null
 
     fun addCallback(callback: GameControllerInterface?) {
@@ -26,13 +25,21 @@ class GameView(context: Context) : SurfaceView(context) {
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null) return super.onTouchEvent(event)
-        if (System.currentTimeMillis() - lastClick > 500){
-            lastClick = System.currentTimeMillis()
-            gameControllerCallback?.clickHere(event.x, event.y)
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_UP -> {
+                val eventDuration = event.eventTime - event.downTime
+                if (eventDuration < 500){
+                }
+                else {
+                    gameControllerCallback?.clickHere(event.x, event.y)
+                }
+            }
+            MotionEvent.ACTION_MOVE -> {
+                gameControllerCallback?.clickHere(event.x, event.y)
+            }
         }
-        return super.onTouchEvent(event)
+        return true
     }
 
     interface GameControllerInterface : SurfaceHolder.Callback {

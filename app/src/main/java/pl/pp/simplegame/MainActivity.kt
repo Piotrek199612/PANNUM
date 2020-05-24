@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), GameView.GameControllerInterface {
 
     @Synchronized
     override fun clickHere(x: Float, y: Float) {
-        gameState.killSprite(x,y)
+        gameState.moveSprite(x,y, gameView.width, gameView.height)
     }
 
 }
