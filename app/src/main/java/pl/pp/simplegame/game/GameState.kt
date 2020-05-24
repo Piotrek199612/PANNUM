@@ -1,6 +1,7 @@
 package pl.pp.simplegame.game
 
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import pl.pp.simplegame.R
 import java.util.*
@@ -15,6 +16,8 @@ class GameState {
 
     val sprites = mutableListOf<Sprite>()
     val temps = mutableListOf<TempSprite>()
+    var star: Star? = null
+    private var starBmp: Bitmap? = null
 
     fun initGame(resources: Resources, maxWidth: Int, maxHeight: Int) {
         endState = EndState.NO
@@ -32,6 +35,7 @@ class GameState {
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good4, true))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good5, true))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good6, true))*/
+        starBmp = BitmapFactory.decodeResource(resources, R.drawable.star)
     }
 
     fun update(maxWidth: Int, maxHeight: Int) {
@@ -47,10 +51,15 @@ class GameState {
             if (temps[i].canBeRemoved())
                 temps.removeAt(i)
         }
+
+        star?.update(maxWidth, maxHeight)
+        if (star?.visible == false)
+            star = null
+
         calcEnd()
     }
 
-    private fun detectCollision(){
+    private fun detectCollision() {
         val spritesToRemove = mutableSetOf<Sprite>()
         for (spriteA in sprites) {
             if (spriteA.good) {
@@ -58,12 +67,25 @@ class GameState {
                     if (!spriteB.good) {
                         if (spriteA.isCollision(spriteB)) {
                             spritesToRemove.add(spriteA)
-                            spritesToRemove.add (spriteB)
+                            spritesToRemove.add(spriteB)
                         }
                     }
                 }
             }
         }
+
+        if (star?.visible == true) {
+            for (sprite in sprites) {
+                if (!sprite.good) {
+                    if (sprite.isCollision(star)) {
+                        spritesToRemove.add(sprite)
+                        star = null
+                        break
+                    }
+                }
+            }
+        }
+
         for (sprite in spritesToRemove) {
             sprites.remove(sprite)
             temps.add(TempSprite(sprite.x.toFloat(), sprite.y.toFloat()))
@@ -97,14 +119,6 @@ class GameState {
         }
 
         if (isGameOver()) return
-        for (i in sprites.lastIndex downTo 0) {
-            val sprite = sprites[i]
-            if (sprite.isCollision(x, y)) {
-                sprites.remove(sprite)
-                temps.add(TempSprite(x, y))
-                break
-            }
-        }
     }
 
     private fun calcEnd() {
@@ -119,5 +133,17 @@ class GameState {
 
     fun isGameOver(): Boolean {
         return endState != EndState.NO
+    }
+
+    fun throwStar() {
+        if (isGameOver()) return
+        if(starBmp == null) return
+        for (sprite in sprites) {
+            if (sprite.good) {
+                val x = sprite.x + sprite.width / 2 - starBmp!!.width / 2
+                val y = sprite.y + sprite.height / 2 - starBmp!!.height / 2
+                star = Star (starBmp!!, x, y, sprite.xSpeed * 3, sprite.ySpeed * 3)
+            }
+        }
     }
 }

@@ -52,6 +52,12 @@ class Sprite(val bmp: Bitmap, val good:Boolean, var x: Int, var y: Int, var xSpe
             return false
         return true
     }
+    fun isCollision(star: Star?): Boolean {
+        if (star == null) return false
+        if (x + width < star.x ||star.x + star.width < x ||y + height < star.y ||star.y + star.height < y)
+            return false
+        return true
+    }
 
     fun setSpeed(xDirection: Float, yDirection: Float, maxWidth: Float, maxHeight: Float) {
         xSpeed = (((xDirection - x) / maxWidth) * MAX_SPEED * 3).roundToInt()

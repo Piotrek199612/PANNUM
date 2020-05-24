@@ -57,4 +57,9 @@ class MainActivity : AppCompatActivity(), GameView.GameControllerInterface {
         gameState.moveSprite(x,y, gameView.width, gameView.height)
     }
 
+    @Synchronized
+    override fun throwStar(x: Float, y: Float) {
+        gameState.throwStar()
+    }
+
 }

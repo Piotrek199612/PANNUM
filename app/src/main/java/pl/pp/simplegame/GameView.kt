@@ -30,6 +30,7 @@ class GameView(context: Context) : SurfaceView(context) {
             MotionEvent.ACTION_UP -> {
                 val eventDuration = event.eventTime - event.downTime
                 if (eventDuration < 500){
+                    gameControllerCallback?.throwStar(x, y)
                 }
                 else {
                     gameControllerCallback?.clickHere(event.x, event.y)
@@ -45,5 +46,6 @@ class GameView(context: Context) : SurfaceView(context) {
     interface GameControllerInterface : SurfaceHolder.Callback {
         override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {}
         fun clickHere(x: Float, y: Float)
+        fun throwStar(x: Float, y: Float)
     }
 }

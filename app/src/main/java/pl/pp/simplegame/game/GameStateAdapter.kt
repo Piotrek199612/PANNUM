@@ -27,6 +27,8 @@ class GameStateAdapter(private val resources: Resources) {
             drawSprite(canvas, sprite)
         }
 
+        gameState.star?.let { drawStar(canvas, it) }
+
         if (gameState.isGameOver()) {
             val x = (canvas.width / 2).toFloat()
             val y =
@@ -60,5 +62,9 @@ class GameStateAdapter(private val resources: Resources) {
             temp.y - bmpBlood.height / 2,
             null
         )
+    }
+
+    private fun drawStar(canvas: Canvas, star: Star) {
+        canvas.drawBitmap(star.bmp, star.x.toFloat(), star.y.toFloat(), null)
     }
 }
