@@ -1,10 +1,18 @@
 package pl.pp.simplegame.game
 
+import android.annotation.TargetApi
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.SoundPool
+import android.os.Build
 import pl.pp.simplegame.R
 import java.util.*
+
+
 
 class GameState {
 
@@ -18,6 +26,12 @@ class GameState {
     val temps = mutableListOf<TempSprite>()
     var star: Star? = null
     private var starBmp: Bitmap? = null
+    private var soundPool: SoundPool? = null
+    private val soundPoolStreamsNo = 3
+    private var badDeathID = 0
+    private var goodDeathID = 0
+    private var starID = 0
+    private val soundVolume = 0.5f
 
     fun initGame(resources: Resources, maxWidth: Int, maxHeight: Int) {
         endState = EndState.NO
@@ -36,6 +50,7 @@ class GameState {
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good5, true))
         sprites.add(createSprite(resources, maxWidth, maxHeight, R.drawable.good6, true))*/
         starBmp = BitmapFactory.decodeResource(resources, R.drawable.star)
+
     }
 
     fun update(maxWidth: Int, maxHeight: Int) {
@@ -68,6 +83,7 @@ class GameState {
                         if (spriteA.isCollision(spriteB)) {
                             spritesToRemove.add(spriteA)
                             spritesToRemove.add(spriteB)
+                            soundPool?.play(goodDeathID,soundVolume, soundVolume, 1, 0, 1f)
                         }
                     }
                 }
@@ -79,6 +95,7 @@ class GameState {
                 if (!sprite.good) {
                     if (sprite.isCollision(star)) {
                         spritesToRemove.add(sprite)
+                        soundPool?.play(badDeathID,soundVolume, soundVolume, 1, 0, 1f)
                         star = null
                         break
                     }
@@ -137,13 +154,43 @@ class GameState {
 
     fun throwStar() {
         if (isGameOver()) return
-        if(starBmp == null) return
+        if (starBmp == null) return
         for (sprite in sprites) {
             if (sprite.good) {
                 val x = sprite.x + sprite.width / 2 - starBmp!!.width / 2
                 val y = sprite.y + sprite.height / 2 - starBmp!!.height / 2
-                star = Star (starBmp!!, x, y, sprite.xSpeed * 3, sprite.ySpeed * 3)
+                star = Star(starBmp!!, x, y, sprite.xSpeed * 3, sprite.ySpeed * 3)
+                soundPool?.play(starID,soundVolume, soundVolume, 1, 0, 1f)
             }
         }
+    }
+
+    fun loadSoundPool(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            createNewSoundPool()
+        } else {
+            createOldSoundPool()
+        }
+
+        soundPool?.setOnLoadCompleteListener { soundPool, sampleId, status -> }
+
+        badDeathID = soundPool!!.load(context, R.raw.bad_death, 1)
+        goodDeathID = soundPool!!.load(context, R.raw.good_death, 1)
+        starID = soundPool!!.load(context, R.raw.star, 1)
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun createNewSoundPool() {
+        val attributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+        soundPool =
+            SoundPool.Builder().setMaxStreams(soundPoolStreamsNo).setAudioAttributes(attributes)
+                .build()
+    }
+
+    @SuppressWarnings("deprecation")
+    private fun createOldSoundPool() {
+        soundPool = SoundPool(soundPoolStreamsNo, AudioManager.STREAM_MUSIC, 0)
     }
 }

@@ -1,17 +1,13 @@
 package pl.pp.simplegame
 
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.SurfaceHolder
 import pl.pp.simplegame.game.GameState
 import pl.pp.simplegame.game.GameStateAdapter
-import pl.pp.simplegame.game.Sprite
-import java.util.*
 
 class MainActivity : AppCompatActivity(), GameView.GameControllerInterface {
 
@@ -30,6 +26,7 @@ class MainActivity : AppCompatActivity(), GameView.GameControllerInterface {
 
         picture = BitmapFactory.decodeResource(resources, R.drawable.good1)
         gameStateAdaper = GameStateAdapter(resources)
+        gameState.loadSoundPool(this)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -61,5 +58,4 @@ class MainActivity : AppCompatActivity(), GameView.GameControllerInterface {
     override fun throwStar(x: Float, y: Float) {
         gameState.throwStar()
     }
-
 }
