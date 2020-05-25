@@ -13,9 +13,6 @@ import pl.pp.simplegame.R
 import java.util.*
 import kotlin.random.nextInt
 
-
-
-
 class GameState {
 
     enum class EndState {
@@ -27,7 +24,9 @@ class GameState {
     val sprites = mutableListOf<Sprite>()
     val temps = mutableListOf<TempSprite>()
     var star: Star? = null
+
     private var starBmp: Bitmap? = null
+
     private var soundPool: SoundPool? = null
     private val soundPoolStreamsNo = 3
     private var badDeathID = 0
@@ -37,7 +36,7 @@ class GameState {
     private val soundVolume = 0.5f
 
     private val respawn = hashMapOf<Sprite, Long>()
-    private val RESPAWN_MIN = 8000
+    private val RESPAWN_MIN = 9000
     private val RESPAWN_MAX = 20000
 
     fun initGame(resources: Resources, maxWidth: Int, maxHeight: Int) {
@@ -56,9 +55,10 @@ class GameState {
     }
 
     fun update(maxWidth: Int, maxHeight: Int) {
-        detectCollision()
+        detectCollision(maxWidth, maxHeight)
 
         if (isGameOver()) return
+
         for (sprite in sprites) {
             sprite.update(maxWidth, maxHeight)
         }
@@ -87,22 +87,38 @@ class GameState {
         calcEnd()
     }
 
-    private fun detectCollision() {
+    private fun detectCollision(maxWidth: Int, maxHeight: Int) {
         val spritesToRemove = mutableSetOf<Sprite>()
-        for (spriteA in sprites) {
-            if (spriteA.good) {
-                for (spriteB in sprites) {
-                    if (!spriteB.good) {
+
+        detectPlayerCollision(spritesToRemove)
+        detectStarCollision(spritesToRemove)
+
+
+        for (sprite in spritesToRemove) {
+            sprites.remove(sprite)
+            temps.add(TempSprite(sprite.x.toFloat(), sprite.y.toFloat()))
+            if (sprites.filter { it.good }.isNotEmpty()){
+                val player = sprites.filter { it.good }[0]
+                sprite.setSpawnPoint(maxWidth, maxHeight, player.x, player.y)
+                respawn[sprite] = System.currentTimeMillis() + kotlin.random.Random.nextInt(RESPAWN_MIN..RESPAWN_MAX)
+
+            }
+        }
+    }
+
+    private fun detectPlayerCollision(spritesToRemove: MutableSet<Sprite>){
+        for (spriteA in sprites)
+            if (spriteA.good)
+                for (spriteB in sprites)
+                    if (!spriteB.good)
                         if (spriteA.isCollision(spriteB)) {
                             spritesToRemove.add(spriteA)
                             spritesToRemove.add(spriteB)
                             soundPool?.play(goodDeathID,soundVolume, soundVolume, 1, 0, 1f)
                         }
-                    }
-                }
-            }
-        }
+    }
 
+    private fun detectStarCollision(spritesToRemove: MutableSet<Sprite>) {
         if (star?.visible == true) {
             for (sprite in sprites) {
                 if (!sprite.good) {
@@ -115,21 +131,9 @@ class GameState {
                 }
             }
         }
-
-        for (sprite in spritesToRemove) {
-            sprites.remove(sprite)
-            temps.add(TempSprite(sprite.x.toFloat(), sprite.y.toFloat()))
-            respawn[sprite] = System.currentTimeMillis() + kotlin.random.Random.nextInt(RESPAWN_MIN..RESPAWN_MAX)
-        }
     }
 
-    private fun createSprite(
-        resources: Resources,
-        maxWidth: Int,
-        maxHeight: Int,
-        resourceId: Int,
-        good: Boolean
-    ): Sprite {
+    private fun createSprite(resources: Resources, maxWidth: Int, maxHeight: Int, resourceId: Int, good: Boolean): Sprite {
         val bmp = BitmapFactory.decodeResource(resources, resourceId)
         val rnd = Random()
         val x = rnd.nextInt(maxWidth - bmp.width)
@@ -167,8 +171,8 @@ class GameState {
     }
 
     fun throwStar() {
-        if (isGameOver()) return
-        if (starBmp == null) return
+        if (isGameOver() || starBmp == null) return
+
         for (sprite in sprites) {
             if (sprite.good) {
                 val x = sprite.x + sprite.width / 2 - starBmp!!.width / 2

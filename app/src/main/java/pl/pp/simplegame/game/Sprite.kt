@@ -1,6 +1,9 @@
 package pl.pp.simplegame.game
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import java.lang.Math.abs
+import java.util.*
 import kotlin.math.atan2
 import kotlin.math.roundToInt
 
@@ -62,5 +65,18 @@ class Sprite(val bmp: Bitmap, val good:Boolean, var x: Int, var y: Int, var xSpe
     fun setSpeed(xDirection: Float, yDirection: Float, maxWidth: Float, maxHeight: Float) {
         xSpeed = (((xDirection - x) / maxWidth) * MAX_SPEED * 3).roundToInt()
         ySpeed = (((yDirection - y) / maxHeight) * MAX_SPEED * 3).roundToInt()
+    }
+
+    fun setSpawnPoint(maxWidth: Int, maxHeight: Int, playerX: Int, playerY:Int){
+        val rnd = Random()
+        do {
+            x = rnd.nextInt(maxWidth - bmp.width)
+        } while( kotlin.math.abs(x - playerX) < 300)
+        do {
+            y = rnd.nextInt(maxHeight - bmp.width)
+        } while( kotlin.math.abs(y - playerY) < 300)
+
+        xSpeed = rnd.nextInt(2 * MAX_SPEED) - MAX_SPEED
+        ySpeed = rnd.nextInt(2 * MAX_SPEED) - MAX_SPEED
     }
 }
